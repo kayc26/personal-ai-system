@@ -105,22 +105,15 @@ h2{font-size:clamp(26px,3.4vw,34px);line-height:1.15;font-weight:600;letter-spac
 .mapnote{margin:12px 2px 0;font-size:14px;color:var(--muted);min-height:2.9em}
 .mapnote b{color:var(--ink);font-weight:600}
 
-/* evolution */
-.timeline{list-style:none;margin:0;padding:0;position:relative}
-.timeline::before{content:"";position:absolute;left:118px;top:6px;bottom:6px;width:1.5px;background:var(--line)}
-.t{display:grid;grid-template-columns:100px 1fr;gap:36px;padding:0 0 26px;position:relative}
-.t time{font-size:14px;color:var(--muted);text-align:right;padding-top:2px;font-variant-numeric:tabular-nums}
-.t::before{content:"";position:absolute;left:113px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--c,var(--ink))}
-.t.next::before{border-style:dashed}
-.t h3{margin:0;font-size:18px;font-weight:600;line-height:1.35}
-.t p{margin:4px 0 0;color:var(--muted);font-size:15.5px;max-width:64ch}
-.chain{margin:12px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;max-width:820px}
-.chain div{padding:12px 14px;border-left:1px solid var(--line)}
-.chain div:first-child{border-left:0}
-.chain dt{font-size:13px;font-weight:600;color:var(--c,var(--ink));margin-bottom:3px}
-.chain dd{margin:0;font-size:15px;line-height:1.45}
-.notbuilt{margin:8px 0 0;font-size:14.5px;color:var(--muted)}
-.notbuilt b{font-weight:600;color:var(--ink)}
+/* growth */
+.grew{list-style:none;margin:0 0 40px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grew li{border-top:3px solid var(--c);padding-top:10px}
+.grew time{display:block;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.grew b{font-weight:600;font-size:17px}
+.changes{list-style:none;margin:0;padding:0;display:grid;gap:18px;max-width:72ch}
+.changes li{color:var(--muted);font-size:16.5px}
+.changes b{color:var(--ink);font-weight:600}
+.nextup{margin:28px 0 0;color:var(--faint);font-size:15px}
 
 /* built */
 .layers{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:34px}
@@ -154,13 +147,7 @@ footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);colo
 @media (max-width:640px){
   .rule{grid-template-columns:1fr}
   .rule span:not(.k){grid-column:1}
-  .timeline::before{left:6px}
-  .t{grid-template-columns:1fr;gap:2px;padding-left:28px}
-  .t time{text-align:left}
-  .t::before{left:1px}
-  .chain{grid-template-columns:1fr}
-  .chain div{border-left:0;border-top:1px solid var(--line)}
-  .chain div:first-child{border-top:0}
+  .grew{grid-template-columns:1fr 1fr;row-gap:18px}
   .layers{grid-template-columns:1fr}
   .flowctl{margin-left:0}
   section.wrap{padding-top:64px}
@@ -185,7 +172,7 @@ footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);colo
       <p>So I built an AI agent around my actual routines. I use it every day to keep my kitchen inventory current, choose what to cook, save recipes, run my workouts, and decide where to eat.</p>
       <div class="cta">
         <a class="btn primary" href="#see-it-work">See it work</a>
-        <a class="btn" href="#how-it-evolved">How it evolved</a>
+        <a class="btn" href="#how-it-grew">How it grew</a>
       </div>
     </div>
     <div class="statcard">
@@ -197,7 +184,7 @@ footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);colo
         <div class="fc"><dd data-stat="recipes">228</dd><dt>saved recipes</dt></div>
         <div class="fc"><dd data-stat="restaurants">1,492</dd><dt>saved restaurants</dt></div>
       </dl>
-      <p class="asof" id="asof" style="margin-top:2px">From my live databases, as of Oct 5, 2026</p>
+      <p class="asof" id="asof">Counts from my databases, as of Oct 5, 2026</p>
     </div>
   </div>
   <div class="rule">
@@ -255,10 +242,22 @@ footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);colo
   </div>
 </section>
 
-<section id="how-it-evolved" class="wrap">
-  <h2>How it evolved</h2>
-  <p class="sub">I only build when something breaks or becomes a weekly pain. Each change starts from something I noticed in daily use, and each one has a list of what I deliberately didn't build.</p>
-  <ol class="timeline" id="timeline"></ol>
+<section id="how-it-grew" class="wrap">
+  <h2>How it grew</h2>
+  <p class="sub">It started in class on Sep 10, during an exercise on building MCP servers. I built a fridge inventory, kept using it, and added a server whenever something else kept bugging me.</p>
+  <ol class="grew">
+    <li class="kc"><time>Sep 10</time><b>Kitchen inventory</b></li>
+    <li class="tc"><time>Sep 18</time><b>Workout log</b></li>
+    <li class="fc"><time>Sep 23</time><b>Food journal</b></li>
+    <li class="nc"><time>Late Sep</time><b>Merged into one system</b></li>
+  </ol>
+  <h3 class="minor">A few things I changed after using it</h3>
+  <ul class="changes">
+    <li><b>A shortlist, not a meal planner.</b> I'd find a recipe I wanted to make that week, just not on a set day. So I added a "this week" list with no days or calendar, and cooking suggestions check it first.</li>
+    <li><b>One tool per job.</b> Every tool showed up twice, and the model picked between them at random. I removed the duplicates, and also retired older tools that overlapped with new ones.</li>
+    <li><b>Store the end time, not the duration.</b> I closed a workout the next morning and it recorded the wrong length. Now a session stores when it ended, and the duration is calculated from that.</li>
+  </ul>
+  <p class="nextup">Next: restaurant lists from other people, with the dishes they recommend, and a training plan for a 10K.</p>
 </section>
 
 <section id="how-its-built" class="wrap">
@@ -301,7 +300,7 @@ footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);colo
       });
       if(s.as_of){
         var d=new Date(s.as_of+'T12:00:00');
-        if(!isNaN(d)) document.getElementById('asof').textContent='From my live databases, as of '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+        if(!isNaN(d)) document.getElementById('asof').textContent='Counts from my databases, as of '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
       }
     }).catch(function(){});
   }catch(e){}
@@ -403,52 +402,6 @@ footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);colo
   })});
   render();
 
-  /* ---------- timeline (edit milestones here) ---------- */
-  var milestones=[
-    {date:"Sep 10",c:"kc",title:"First server: a kitchen inventory",
-     text:"Food kept going bad before I used it. I wrote an MCP server to track what's in my fridge, freezer, and pantry, with a Claude project that adds items from a photo of my grocery haul."},
-    {date:"Sep 18",c:"tc",title:"Second server: a workout log",
-     text:"I was losing track of my weights and spending gym time looking up exercises. A trainer project now picks each session and prescribes weights from a log of every set."},
-    {date:"Sep 23",c:"fc",title:"Third server: a food journal",
-     text:"Home cooking, restaurant visits, saved places, and saved recipes, joined by one shared dish catalog."},
-    {date:"Late Sep",c:"nc",title:"Three assistants become one system",
-     obs:"Three separate projects had duplicated rules that drifted apart, and the original names confused even me.",
-     chg:"Merged them into one project that routes each request to a skill or a database, renamed every connector and skill to say what it holds or does, and moved facts out of chat memory.",
-     res:"One copy of every rule, and a layer rule for where new things go."},
-    {date:"Sep 25",c:"tc",title:"Cardio and race plans",
-     text:"Signing up for a 10K meant runs had to fit around lifting. The database stores the plan and what's done or missed; a skill writes and adjusts it."},
-    {date:"Sep 27",c:"fc",title:"A \"this week\" list, not a meal plan",
-     obs:"I'd see a recipe I wanted to make this week, but not on a specific day.",
-     chg:"Added a \"queued\" field to saved recipes, separate from status, so a favorite can be queued without losing its rating.",
-     res:"Cooking suggestions pick from my own shortlist first. Cooking a recipe takes it off automatically.",
-     not:"days, a calendar, or a weekly reset."},
-    {date:"Sep 27",c:"fc",title:"Saving a recipe in one request",
-     obs:"Saving a RedNote recipe meant screenshots and manual pasting.",
-     chg:"Built a clipping skill that reads a page's structured recipe data first, and moved saving out of the logging skill so the two don't both fire.",
-     res:"Full recipe text is stored, so it outlives dead links and paywalls."},
-    {date:"Sep 27",c:"nc",title:"Fewer tools, clearer choices",
-     obs:"Every tool showed up twice, from a desktop config and a web connector pointing at the same servers. The model picked between them arbitrarily.",
-     chg:"Removed the duplicates, and set a rule: daily use goes through one connector, testing happens against a test database.",
-     res:"One tool per job. I also removed older tools that competed with the new \"this week\" list."},
-    {date:"Sep 29",c:"tc",title:"Workout duration that can't be wrong",
-     obs:"I closed a workout the next morning, so it recorded the wrong duration, with no way to fix it.",
-     chg:"Closing a session now takes an optional end time, and duration is derived from start and end.",
-     res:"Duration and timestamps can never disagree.",
-     not:"guessing the end from the last logged set, or auto-closing old sessions."},
-    {date:"Sep 30",c:"fc",title:"Recipes that fit my macros and my time",
-     text:"Saved recipes now carry per-serving nutrition and total time, exactly as the source publishes them and never estimated."},
-    {date:"Next",c:"nc",next:true,title:"In progress",
-     text:"Restaurant lists from other people (published guides, friends' lists) with the specific dishes they recommend, a race-training skill, and live stats on this page."}
-  ];
-  var tl=document.getElementById('timeline');
-  milestones.forEach(function(m){
-    var li=document.createElement('li'); li.className='t '+m.c+(m.next?' next':'');
-    var h='<time>'+m.date+'</time><div><h3>'+m.title+'</h3>';
-    if(m.text) h+='<p>'+m.text+'</p>';
-    if(m.obs) h+='<dl class="chain"><div><dt>Noticed</dt><dd>'+m.obs+'</dd></div><div><dt>Changed</dt><dd>'+m.chg+'</dd></div><div><dt>Result</dt><dd>'+m.res+'</dd></div></dl>';
-    if(m.not) h+='<p class="notbuilt"><b>Deliberately not built:</b> '+m.not+'</p>';
-    li.innerHTML=h+'</div>'; tl.appendChild(li);
-  });
 })();
 </script>
 </body>
