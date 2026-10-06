@@ -1,0 +1,99 @@
+{
+  "as_of": "2026-10-05",
+  "restaurants": 1492,
+  "recipes": 228,
+  "kitchen_items": 95,
+  "workouts": 9,
+  "sets": 147,
+  "tools": 53,
+  "servers": {
+    "kitchen-inventory": {
+      "server": "kitchen-inventory",
+      "as_of": "2026-10-05",
+      "tools": 8,
+      "totals": {
+        "items_tracked": 95,
+        "locations": 4,
+        "expired_now": 1
+      },
+      "monthly": []
+    },
+    "workout-log": {
+      "server": "workout-log",
+      "as_of": "2026-10-05",
+      "tools": 19,
+      "totals": {
+        "sessions_completed": 9,
+        "sets_logged": 147,
+        "cardio_sessions": 4,
+        "cardio_km": 12.9,
+        "undated_sessions_completed": 0,
+        "undated_sets_logged": 0,
+        "undated_cardio_sessions": 0,
+        "undated_cardio_km": 0.0
+      },
+      "monthly": [
+        {
+          "month": "2026-09",
+          "sessions_completed": 6,
+          "sets_logged": 96,
+          "cardio_sessions": 3,
+          "cardio_km": 8.1
+        },
+        {
+          "month": "2026-10",
+          "sessions_completed": 3,
+          "sets_logged": 51,
+          "cardio_sessions": 1,
+          "cardio_km": 4.8
+        }
+      ]
+    },
+    "food-journal": {
+      "server": "food-journal",
+      "as_of": "2026-10-05",
+      "tools": 26,
+      "totals": {
+        "places": 1492,
+        "places_by_status": {
+          "want_to_go": 1313,
+          "been": 171,
+          "visited": 8
+        },
+        "places_imported": 1481,
+        "recipes": 228,
+        "recipes_by_status": {
+          "saved": 220,
+          "cook_again": 3,
+          "cooked": 4,
+          "dropped": 1
+        },
+        "recipes_full_text": 10,
+        "recipes_imported": 214,
+        "home_cooks": 6,
+        "visits": 8,
+        "dishes_out": 17,
+        "undated_home_cooks": 0,
+        "undated_visits": 0,
+        "undated_recipes_saved": 0,
+        "undated_places_added": 0
+      },
+      "monthly": [
+        {
+          "month": "2026-09",
+          "home_cooks": 4,
+          "visits": 5,
+          "recipes_saved": 13,
+          "places_added": 9
+        },
+        {
+          "month": "2026-10",
+          "home_cooks": 2,
+          "visits": 3,
+          "recipes_saved": 1,
+          "places_added": 2
+        }
+      ]
+    }
+  }
+}
