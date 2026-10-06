@@ -3,376 +3,449 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kay's personal AI system: architecture map</title>
+<title>Kay Chen: a personal AI system for training, cooking, and eating out</title>
+<meta name="description" content="An AI agent I built around my own routines and use every day: three MCP servers, seven skills, and one rule about what the model should and shouldn't decide.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F4F5F2; --surface:#FFFFFF; --ink:#1D2530; --muted:#5B6470; --line:#D6DAD3;
+  --bg:#F4F5F2; --surface:#FFFFFF; --ink:#1B232E; --muted:#5A636F; --faint:#8A929C; --line:#D8DCD4;
   --kitchen:#4E7A2F; --train:#2C5C8F; --food:#8C3B67; --neutral:#6B6F76;
-  --kitchen-soft:#E9F0E2; --train-soft:#E3ECF6; --food-soft:#F4E6EE; --neutral-soft:#ECEDEE;
-  --focus:#1D2530;
+  --kitchen-soft:#E8F0E0; --train-soft:#E2EBF5; --food-soft:#F3E5ED; --neutral-soft:#ECEDEE;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#14181D; --surface:#1D232A; --ink:#E7EAED; --muted:#9AA2AC; --line:#323A43;
-    --kitchen:#93C26E; --train:#82B0E2; --food:#D98DB7; --neutral:#A4A8AE;
-    --kitchen-soft:#223020; --train-soft:#1B2A3B; --food-soft:#33202B; --neutral-soft:#262B31;
-    --focus:#E7EAED;
+    --bg:#13171C; --surface:#1C2229; --ink:#E7EAED; --muted:#9BA3AD; --faint:#727A84; --line:#313942;
+    --kitchen:#93C26E; --train:#84B1E3; --food:#DA8EB8; --neutral:#A4A8AE;
+    --kitchen-soft:#21301F; --train-soft:#1A2939; --food-soft:#32202A; --neutral-soft:#252A30;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#14181D; --surface:#1D232A; --ink:#E7EAED; --muted:#9AA2AC; --line:#323A43;
-  --kitchen:#93C26E; --train:#82B0E2; --food:#D98DB7; --neutral:#A4A8AE;
-  --kitchen-soft:#223020; --train-soft:#1B2A3B; --food-soft:#33202B; --neutral-soft:#262B31;
-  --focus:#E7EAED;
+  --bg:#13171C; --surface:#1C2229; --ink:#E7EAED; --muted:#9BA3AD; --faint:#727A84; --line:#313942;
+  --kitchen:#93C26E; --train:#84B1E3; --food:#DA8EB8; --neutral:#A4A8AE;
+  --kitchen-soft:#21301F; --train-soft:#1A2939; --food-soft:#32202A; --neutral-soft:#252A30;
 }
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);
   font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
-code,.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82em}
-.wrap{max-width:1080px;margin:0 auto;padding:40px 20px 64px}
-header h1{font-size:clamp(28px,4.6vw,44px);line-height:1.08;font-weight:600;letter-spacing:-.02em;margin:0 0 14px;max-width:18ch}
-header p{margin:0;color:var(--muted);max-width:62ch;font-size:17px}
-.rule{margin:28px 0 36px;padding:18px 22px;border-left:4px solid var(--ink);background:var(--surface);max-width:70ch}
-.rule strong{display:block;font-weight:600;font-size:19px;line-height:1.35;margin-bottom:4px}
-.rule span{color:var(--muted);font-size:15px}
+  font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:inherit;text-underline-offset:3px}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+section.wrap{padding-top:88px}
+h2{font-size:clamp(26px,3.4vw,34px);line-height:1.15;font-weight:600;letter-spacing:-.02em;margin:0 0 10px}
+.sub{color:var(--muted);margin:0 0 28px;max-width:62ch}
 
-/* trace controls */
-.traces{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
-.traces .lead{font-weight:500;margin-right:6px}
-button{font:inherit;cursor:pointer}
-.chipbtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 14px;border-radius:999px;font-size:15px}
-.chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-button:focus-visible,.node:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+/* hero */
+.hero{padding-top:64px}
+.hero .by{color:var(--muted);font-size:15px;margin:0 0 18px}
+.hero .by a{text-decoration:none;border-bottom:1px solid var(--line)}
+.hero h1{font-size:clamp(34px,5.6vw,60px);line-height:1.04;font-weight:600;letter-spacing:-.025em;margin:0 0 26px;max-width:21ch}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:48px;align-items:start}
+.story p{margin:0 0 14px;font-size:19px;line-height:1.55;max-width:56ch}
+.story p.lead{color:var(--muted)}
+.problems{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:8px}
+.problems li{display:grid;grid-template-columns:12px 1fr;gap:12px;font-size:17px;color:var(--muted)}
+.problems li::before{content:"";width:8px;height:8px;border-radius:2px;margin-top:9px;background:var(--c)}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;padding:10px 18px;border-radius:999px;font-size:15px;font-weight:500;text-decoration:none;border:1px solid var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.statcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:20px 18px;margin:0}
+.stats div{border-top:3px solid var(--c);padding-top:8px}
+.stats dd{margin:0;font-size:clamp(30px,3.6vw,40px);font-weight:600;letter-spacing:-.02em;line-height:1.05;font-variant-numeric:tabular-nums}
+.stats dt{color:var(--muted);font-size:14px;line-height:1.35;margin-top:4px}
+.asof{color:var(--faint);font-size:13px;margin:16px 0 0}
+.rule{margin:44px 0 0;padding:24px 28px;background:var(--ink);color:var(--bg);border-radius:14px;display:grid;grid-template-columns:auto 1fr;gap:6px 22px;align-items:baseline}
+.rule .k{font-size:14px;opacity:.7}
+.rule strong{font-size:clamp(20px,2.4vw,26px);font-weight:600;line-height:1.25;letter-spacing:-.01em}
+.rule span:not(.k){grid-column:2;opacity:.75;font-size:16px;max-width:70ch}
 
-.stepbar{display:none;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:18px}
-.stepbar.show{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
-.stepnum{font-weight:600;font-variant-numeric:tabular-nums;min-width:3.2em}
-.steptext{min-height:2.9em}
-.steptext code{background:var(--neutral-soft);padding:1px 5px;border-radius:4px}
-.stepctl{display:flex;gap:6px}
-.stepctl button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:6px 12px;font-size:14px}
-.stepctl button:disabled{opacity:.35;cursor:default}
+/* see it work */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.tab{border:1px solid var(--line);background:var(--surface);padding:9px 16px;border-radius:999px;font-size:15px}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px;align-items:start}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.step{position:relative;padding:0 0 0 46px;margin:0}
+.step button{display:block;width:100%;text-align:left;background:none;border:0;padding:12px 14px;border-radius:10px;transition:background-color .2s}
+.step::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:11px;width:30px;height:30px;border-radius:50%;
+  border:1.5px solid var(--line);display:grid;place-items:center;font-size:14px;font-weight:600;color:var(--muted);background:var(--bg);z-index:1;transition:all .2s}
+.step::after{content:"";position:absolute;left:15px;top:41px;bottom:-11px;width:1.5px;background:var(--line)}
+.step:last-child::after{display:none}
+.step b{display:block;font-weight:600;font-size:17px;line-height:1.35}
+.step span{display:block;color:var(--muted);font-size:15.5px;margin-top:3px}
+.step code{display:inline-block;margin-top:6px;font-size:12.5px;color:var(--faint)}
+.step.on button{background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+.step.on::before{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.flowctl{display:flex;gap:8px;margin:14px 0 0 46px}
+.flowctl button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 14px;font-size:14px}
+.flowctl button:disabled{opacity:.35;cursor:default}
 
-/* diagram */
-.diagram{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
-.band{display:grid;grid-template-columns:190px 1fr;border-top:1px solid var(--line)}
-.band:first-child{border-top:0}
-.band-label{padding:18px 18px;border-right:1px solid var(--line);background:var(--bg)}
-.band-label b{display:block;font-weight:600;font-size:15px}
-.band-label span{display:block;color:var(--muted);font-size:13.5px;line-height:1.4;margin-top:2px}
-.band-body{padding:16px;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
+.map{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.layer{padding:10px 0;border-top:1px dashed var(--line)}
+.layer:first-child{border-top:0;padding-top:2px}
+.layer h4{margin:0 0 7px;font-size:12.5px;font-weight:500;color:var(--faint)}
+.nodes{display:flex;flex-wrap:wrap;gap:6px}
+.node{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:5px 9px;font-size:13.5px;line-height:1.3;transition:opacity .2s, box-shadow .2s, border-color .2s}
+.node.sk{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:12.5px;border-left:3px solid var(--c)}
+.node.sv{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:13px;font-weight:500;background:var(--soft);border-color:transparent;border-top:3px solid var(--c);padding:8px 10px;flex:1 1 130px;text-align:left}
+.node.sv small{display:block;font-family:"IBM Plex Sans",system-ui,sans-serif;font-weight:400;color:var(--muted);font-size:12px}
+.map.focus .node:not(.on){opacity:.25}
+.node.on{box-shadow:0 0 0 2px var(--ink)}
+.mapnote{margin:12px 2px 0;font-size:14px;color:var(--muted);min-height:2.9em}
+.mapnote b{color:var(--ink);font-weight:600}
 
-.node{border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);
-  padding:9px 12px;font-size:15px;text-align:left;transition:opacity .2s, box-shadow .2s, border-color .2s, background-color .2s}
-.node small{display:block;color:var(--muted);font-size:13px;line-height:1.35;margin-top:1px}
-.node.skill{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:14px;padding:8px 11px}
-.node.skill.rules{font-family:inherit;font-style:italic}
-.node.wide{flex:1 1 260px}
+/* evolution */
+.timeline{list-style:none;margin:0;padding:0;position:relative}
+.timeline::before{content:"";position:absolute;left:118px;top:6px;bottom:6px;width:1.5px;background:var(--line)}
+.t{display:grid;grid-template-columns:100px 1fr;gap:36px;padding:0 0 26px;position:relative}
+.t time{font-size:14px;color:var(--muted);text-align:right;padding-top:2px;font-variant-numeric:tabular-nums}
+.t::before{content:"";position:absolute;left:113px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--c,var(--ink))}
+.t.next::before{border-style:dashed}
+.t h3{margin:0;font-size:18px;font-weight:600;line-height:1.35}
+.t p{margin:4px 0 0;color:var(--muted);font-size:15.5px;max-width:64ch}
+.chain{margin:12px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;max-width:820px}
+.chain div{padding:12px 14px;border-left:1px solid var(--line)}
+.chain div:first-child{border-left:0}
+.chain dt{font-size:13px;font-weight:600;color:var(--c,var(--ink));margin-bottom:3px}
+.chain dd{margin:0;font-size:15px;line-height:1.45}
+.notbuilt{margin:8px 0 0;font-size:14.5px;color:var(--muted)}
+.notbuilt b{font-weight:600;color:var(--ink)}
 
-.servers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
-.server{border-radius:10px;border:1px solid var(--line);padding:0;overflow:hidden;text-align:left;background:var(--surface);color:var(--ink)}
-.server .top{padding:12px 14px 10px;border-bottom:1px solid var(--line)}
-.server .top b{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:15px;font-weight:500}
-.server .top span{display:block;color:var(--muted);font-size:13px}
-.server dl{margin:0;padding:10px 14px 14px;font-size:14px}
-.server dt{font-weight:500;margin-top:6px}
-.server dt:first-child{margin-top:0}
-.server dd{margin:0;color:var(--muted)}
-.server.kitchen .top{background:var(--kitchen-soft)} .server.kitchen{border-top:4px solid var(--kitchen)}
-.server.train .top{background:var(--train-soft)} .server.train{border-top:4px solid var(--train)}
-.server.food .top{background:var(--food-soft)} .server.food{border-top:4px solid var(--food)}
+/* built */
+.layers{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:34px}
+.lc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.lc h3{margin:0 0 4px;font-size:16px;font-weight:600}
+.lc p{margin:0;font-size:15px;color:var(--muted)}
+.lc .test{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:14px;color:var(--ink);font-style:italic}
+.decisions{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:24px 32px}
+.decisions b{display:block;font-weight:600;margin-bottom:4px}
+.decisions span{color:var(--muted);font-size:15.5px}
+.servers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:34px}
+.svc{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:12px;padding:16px}
+.svc h3{margin:0;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:15px;font-weight:500}
+.svc .n{color:var(--muted);font-size:13.5px}
+.svc p{margin:8px 0 0;font-size:15px;color:var(--muted)}
+h3.minor{font-size:19px;font-weight:600;margin:0 0 14px}
 
-.skill.k{border-left:4px solid var(--kitchen)}
-.skill.t{border-left:4px solid var(--train)}
-.skill.f{border-left:4px solid var(--food)}
-.skill.m{border-left:4px solid var(--neutral)}
+footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:15px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 
-/* highlight state */
-.diagram.focus .node:not(.on){opacity:.28}
-.node.on{box-shadow:0 0 0 2px var(--ink);border-color:var(--ink);opacity:1}
-.server.on .top{filter:saturate(1.2)}
+.kc{--c:var(--kitchen);--soft:var(--kitchen-soft)}
+.tc{--c:var(--train);--soft:var(--train-soft)}
+.fc{--c:var(--food);--soft:var(--food-soft)}
+.nc{--c:var(--neutral);--soft:var(--neutral-soft)}
 
-/* detail */
-.detail{margin-top:14px;min-height:52px;color:var(--muted);font-size:15px;max-width:76ch}
-.detail b{color:var(--ink);font-weight:600}
-
-/* table */
-h2{font-size:22px;font-weight:600;letter-spacing:-.01em;margin:48px 0 14px}
-.scroll{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:15px}
-th,td{text-align:left;padding:11px 14px;border-top:1px solid var(--line);vertical-align:top}
-thead th{border-top:0;background:var(--bg);font-weight:600;font-size:14px}
-td:first-child{font-weight:500;white-space:nowrap}
-td:last-child{color:var(--muted)}
-.decisions{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 32px;margin:0;padding:0;list-style:none}
-.decisions li b{display:block;font-weight:600;margin-bottom:3px}
-.decisions li span{color:var(--muted);font-size:15px}
-footer{margin-top:48px;color:var(--muted);font-size:14px}
-
-@media (max-width:820px){
-  .servers{grid-template-columns:1fr}
-  .decisions{grid-template-columns:1fr}
+@media (max-width:900px){
+  .hero-grid,.flow{grid-template-columns:1fr}
+  .map{position:static}
+  .layers{grid-template-columns:1fr 1fr}
+  .decisions,.servers{grid-template-columns:1fr}
 }
 @media (max-width:640px){
-  .band{grid-template-columns:1fr}
-  .band-label{border-right:0;border-bottom:1px solid var(--line);padding:12px 16px}
-  .stepbar.show{grid-template-columns:1fr}
-  .wrap{padding-top:28px}
+  .rule{grid-template-columns:1fr}
+  .rule span:not(.k){grid-column:1}
+  .timeline::before{left:6px}
+  .t{grid-template-columns:1fr;gap:2px;padding-left:28px}
+  .t time{text-align:left}
+  .t::before{left:1px}
+  .chain{grid-template-columns:1fr}
+  .chain div{border-left:0;border-top:1px solid var(--line)}
+  .chain div:first-child{border-top:0}
+  .layers{grid-template-columns:1fr}
+  .flowctl{margin-left:0}
+  section.wrap{padding-top:64px}
 }
-@media (prefers-reduced-motion:reduce){ .node{transition:none} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>A personal AI system for training, cooking, and eating out</h1>
-    <p>Built on Claude with three MCP servers I wrote and deployed, seven skills, and one project. I use it every day to run my workouts, keep my kitchen inventory current, save recipes, and log what I cook and eat.</p>
-  </header>
 
+<header class="wrap hero">
+  <p class="by">Kay Chen &nbsp;/&nbsp; <a href="https://github.com/kayc26/personal-ai-system">GitHub repo</a></p>
+  <h1>A personal AI system for training, cooking, and eating out</h1>
+  <div class="hero-grid">
+    <div class="story">
+      <p class="lead">I kept running into the same problems:</p>
+      <ul class="problems">
+        <li class="kc">Food going bad before I used it, while I bought more for the next recipe.</li>
+        <li class="fc">Recipes scattered across RedNote, NYT Cooking, blogs, and screenshots.</li>
+        <li class="tc">Workout history that wasn't there when I needed it at the gym.</li>
+        <li class="fc">Over a thousand saved restaurants, and still no quick answer to "where should we eat?"</li>
+      </ul>
+      <p>So I built an AI agent around my actual routines. I use it every day to keep my kitchen inventory current, choose what to cook, save recipes, run my workouts, and decide where to eat.</p>
+      <div class="cta">
+        <a class="btn primary" href="#see-it-work">See it work</a>
+        <a class="btn" href="#how-it-evolved">How it evolved</a>
+      </div>
+    </div>
+    <div class="statcard">
+      <dl class="stats">
+        <div class="fc"><dd data-stat="restaurants">1,492</dd><dt>restaurants saved and searchable</dt></div>
+        <div class="fc"><dd data-stat="recipes">228</dd><dt>recipes saved, full text</dt></div>
+        <div class="kc"><dd data-stat="kitchen_items">95</dd><dt>kitchen items tracked with expiry</dt></div>
+        <div class="tc"><dd data-stat="tools">53</dd><dt>tools across 3 MCP servers I wrote</dt></div>
+      </dl>
+      <p class="asof">In daily use since Sep 10, 2026.</p><p class="asof" id="asof" style="margin-top:2px">From my live databases, as of Oct 6, 2026</p>
+    </div>
+  </div>
   <div class="rule">
+    <span class="k">Design rule</span>
     <strong>If two runs of the model could disagree on something, it belongs in code.</strong>
-    <span>The model makes judgment calls. Facts live in databases, deterministic logic lives in the servers, procedures live in skills, and rules live in one versioned instructions file.</span>
+    <span>The model makes judgment calls. Facts live in databases, deterministic logic lives in the servers, procedures live in skills, and rules live in one versioned file.</span>
   </div>
+</header>
 
-  <div class="traces" role="group" aria-label="Trace a request">
-    <span class="lead">Trace a request:</span>
-    <button class="chipbtn" data-trace="cook" aria-pressed="false">What should I cook tonight?</button>
-    <button class="chipbtn" data-trace="gym" aria-pressed="false">I'm at the gym</button>
-    <button class="chipbtn" data-trace="haul" aria-pressed="false">Grocery haul photo</button>
-    <button class="chipbtn" data-trace="eat" aria-pressed="false">Where should we eat?</button>
+<main>
+<section id="see-it-work" class="wrap">
+  <h2>See it work</h2>
+  <p class="sub">Four things I actually say to it. Step through one to see which skill and which database handle each part.</p>
+  <div class="tabs" role="tablist" aria-label="Example requests">
+    <button class="tab" role="tab" data-flow="cook" aria-selected="true">What should I cook tonight?</button>
+    <button class="tab" role="tab" data-flow="haul" aria-selected="false">Grocery haul photo</button>
+    <button class="tab" role="tab" data-flow="gym" aria-selected="false">I'm at the gym</button>
+    <button class="tab" role="tab" data-flow="eat" aria-selected="false">Where should we eat?</button>
   </div>
-
-  <div class="stepbar" id="stepbar" aria-live="polite">
-    <div class="stepnum" id="stepnum"></div>
-    <div class="steptext" id="steptext"></div>
-    <div class="stepctl">
-      <button id="prev">Back</button>
-      <button id="next">Next</button>
-      <button id="clear">Close</button>
+  <div class="flow">
+    <div>
+      <ol class="steps" id="steps" aria-live="polite"></ol>
+      <div class="flowctl"><button id="prev">Back</button><button id="next">Next step</button></div>
     </div>
-  </div>
-
-  <div class="diagram" id="diagram">
-    <div class="band">
-      <div class="band-label"><b>Interfaces</b><span>Where I talk to it</span></div>
-      <div class="band-body">
-        <button class="node" data-id="app">Claude app<small>phone, desktop, Chrome side panel</small></button>
-        <button class="node" data-id="shortcut">iOS Shortcut<small>pastes remaining macros from MacroFactor</small></button>
-      </div>
-    </div>
-
-    <div class="band">
-      <div class="band-label"><b>Project</b><span>Rules and routing</span></div>
-      <div class="band-body">
-        <button class="node wide" data-id="instr">Project instructions<small>role, coaching rules (progressive overload, session flow), which skill handles what</small></button>
-        <button class="node" data-id="profile">Nutrition profile<small>personal rules file read by a skill</small></button>
-      </div>
-    </div>
-
-    <div class="band">
-      <div class="band-label"><b>Skills</b><span>Reusable procedures</span></div>
-      <div class="band-body">
-        <button class="node skill k" data-id="s-inv">manage-kitchen-inventory</button>
-        <button class="node skill f" data-id="s-cook">suggest-what-to-cook</button>
-        <button class="node skill f" data-id="s-clip">clip-recipe</button>
-        <button class="node skill f" data-id="s-video">recipe-from-video</button>
-        <button class="node skill f" data-id="s-log">log-food</button>
-        <button class="node skill f" data-id="s-eat">suggest-where-to-eat</button>
-        <button class="node skill m" data-id="s-nut">check-nutrition</button>
-        <button class="node skill t rules" data-id="s-train">Lifting sessions run from the project rules</button>
-      </div>
-    </div>
-
-    <div class="band">
-      <div class="band-label"><b>MCP servers</b><span>Facts and deterministic logic, on Render</span></div>
-      <div class="band-body">
-        <div class="servers">
-          <button class="node server kitchen" data-id="kitchen">
-            <div class="top"><b>kitchen-inventory</b><span>8 tools</span></div>
-            <dl><dt>Holds</dt><dd>Items by storage location, quantity, expiry, low-stock threshold</dd>
-            <dt>Computes</dt><dd>What's expiring within N days, what's running low</dd></dl>
-          </button>
-          <button class="node server train" data-id="workout">
-            <div class="top"><b>workout-log</b><span>19 tools</span></div>
-            <dl><dt>Holds</dt><dd>Program, sessions and sets, exercise history and notes, cardio and race plans</dd>
-            <dt>Computes</dt><dd>Today's training status, weekly totals, session duration</dd></dl>
-          </button>
-          <button class="node server food" data-id="food">
-            <div class="top"><b>food-journal</b><span>26 tools</span></div>
-            <dl><dt>Holds</dt><dd>Home cooks, restaurant visits and dishes, saved places, saved recipes with nutrition and time, the "this week" list, a shared dish catalog</dd>
-            <dt>Computes</dt><dd>Dish history across cooking and eating out, what I've explored</dd></dl>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="band">
-      <div class="band-label"><b>Outside services</b><span>Read, not stored</span></div>
-      <div class="band-body">
-        <button class="node" data-id="places">Google Places<small>hours, price, location</small></button>
-        <button class="node" data-id="web">Recipe pages and videos<small>NYT Cooking, blogs, RedNote, YouTube</small></button>
-      </div>
+    <div class="map" id="map" aria-label="System map">
+      <div class="layer"><h4>Interfaces</h4><div class="nodes">
+        <button class="node" data-id="app">Claude app</button>
+        <button class="node" data-id="shortcut">iOS Shortcut (macros)</button>
+      </div></div>
+      <div class="layer"><h4>Project: rules and routing</h4><div class="nodes">
+        <button class="node" data-id="instr">Project instructions</button>
+        <button class="node" data-id="profile">Nutrition profile</button>
+      </div></div>
+      <div class="layer"><h4>Skills: procedures</h4><div class="nodes">
+        <button class="node sk kc" data-id="s-inv">manage-kitchen-inventory</button>
+        <button class="node sk fc" data-id="s-cook">suggest-what-to-cook</button>
+        <button class="node sk fc" data-id="s-clip">clip-recipe</button>
+        <button class="node sk fc" data-id="s-video">recipe-from-video</button>
+        <button class="node sk fc" data-id="s-log">log-food</button>
+        <button class="node sk fc" data-id="s-eat">suggest-where-to-eat</button>
+        <button class="node sk nc" data-id="s-nut">check-nutrition</button>
+        <button class="node sk tc" data-id="s-train">coaching rules</button>
+      </div></div>
+      <div class="layer"><h4>MCP servers: facts and logic</h4><div class="nodes">
+        <button class="node sv kc" data-id="kitchen">kitchen-inventory<small>items, expiry, low stock</small></button>
+        <button class="node sv tc" data-id="workout">workout-log<small>program, sets, cardio</small></button>
+        <button class="node sv fc" data-id="food">food-journal<small>meals, recipes, places</small></button>
+      </div></div>
+      <div class="layer"><h4>Outside services</h4><div class="nodes">
+        <button class="node" data-id="places">Google Places</button>
+        <button class="node" data-id="web">Recipe pages and videos</button>
+      </div></div>
+      <p class="mapnote" id="mapnote"></p>
     </div>
   </div>
+</section>
 
-  <p class="detail" id="detail">Tap any piece to see what it connects to, or trace a request above.</p>
+<section id="how-it-evolved" class="wrap">
+  <h2>How it evolved</h2>
+  <p class="sub">I only build when something breaks or becomes a weekly pain. Each change starts from something I noticed in daily use, and each one has a list of what I deliberately didn't build.</p>
+  <ol class="timeline" id="timeline"></ol>
+</section>
 
-  <h2>Where things live</h2>
-  <div class="scroll">
-    <table>
-      <thead><tr><th>Layer</th><th>Holds</th><th>Test</th></tr></thead>
-      <tbody>
-        <tr><td>MCP server (code)</td><td>Facts, schema, dates, sums, diffs, queries</td><td>Would two runs of the model disagree? Put it in code.</td></tr>
-        <tr><td>Skill</td><td>Reusable procedures and general knowledge</td><td>Useful in any project, or shareable with someone else</td></tr>
-        <tr><td>Project instructions</td><td>Role, coaching rules, routing to skills</td><td>Specific to how I'm coached</td></tr>
-        <tr><td>Chat memory</td><td>Almost nothing</td><td>A fact goes in a database; a rule goes in a file</td></tr>
-      </tbody>
-    </table>
+<section id="how-its-built" class="wrap">
+  <h2>How it's built</h2>
+  <p class="sub">Built on Claude with Model Context Protocol (MCP) servers I wrote and deployed on Render. Everything has exactly one home.</p>
+  <div class="layers">
+    <div class="lc"><h3>MCP servers</h3><p>Facts, schema, and deterministic logic: dates, sums, diffs, queries.</p><p class="test">Would two runs of the model disagree? Put it in code.</p></div>
+    <div class="lc"><h3>Skills</h3><p>Reusable procedures and general knowledge, like how to pick a recipe or log a meal.</p><p class="test">Useful in any project, or shareable with someone else.</p></div>
+    <div class="lc"><h3>Project instructions</h3><p>Role, coaching rules, and which skill handles what.</p><p class="test">Specific to how I'm coached.</p></div>
+    <div class="lc"><h3>Chat memory</h3><p>Almost nothing.</p><p class="test">A fact goes in a database; a rule goes in a file.</p></div>
   </div>
-
-  <h2>A few design decisions</h2>
+  <h3 class="minor">The three servers</h3>
+  <div class="servers">
+    <div class="svc kc"><h3>kitchen-inventory</h3><span class="n">8 tools</span><p>Items by storage location with quantity, expiry, and low-stock thresholds. Computes what's expiring and what's running low.</p></div>
+    <div class="svc tc"><h3>workout-log</h3><span class="n">19 tools</span><p>Program, sessions and sets, exercise history and form notes, cardio and race plans. Computes today's training status and weekly totals.</p></div>
+    <div class="svc fc"><h3>food-journal</h3><span class="n">26 tools</span><p>Home cooking, restaurant visits and dishes, saved places and recipes, the "this week" list, and a shared dish catalog that joins cooking and eating out.</p></div>
+  </div>
+  <h3 class="minor">Design decisions I'd defend</h3>
   <ul class="decisions">
-    <li><b>Expiry checks are a query, not model math</b><span>The weekly review asks the server what's expiring instead of having the model compare dates across the whole inventory.</span></li>
-    <li><b>Bulk imports skip the model</b><span>Syncing about 1,300 saved Google Maps places is a file upload with the diff computed on the server. Passing every row through the model would be slow and error-prone.</span></li>
-    <li><b>Timestamps, not durations</b><span>A workout stores its end time and derives duration from it, so the two can never disagree.</span></li>
-    <li><b>Build only on a trigger</b><span>Changes happen when something breaks or becomes a weekly pain. Each one is a scoped prompt to a coding agent with an explicit "do not build" list, and every decision goes in a change log.</span></li>
+    <li><b>Expiry is a query, not model math</b><span>The weekly review asks the server what's expiring instead of having the model compare dates across the whole inventory.</span></li>
+    <li><b>Bulk imports skip the model</b><span>Syncing about 1,300 Google Maps places is a file upload with the diff computed on the server. Passing every row through the model would be slow and error-prone.</span></li>
+    <li><b>Never estimate nutrition</b><span>Recipe nutrition and cook time are stored only as the source states them. A blank is more useful than a confident guess.</span></li>
   </ul>
+</section>
+</main>
 
-  <footer>Kay Chen</footer>
-</div>
+<footer class="wrap">
+  <span>Kay Chen</span>
+  <span><a href="https://github.com/kayc26/personal-ai-system">Source and decision log on GitHub</a></span>
+</footer>
 
 <script>
 (function(){
-  var uses = {
-    "app":["instr"],
-    "shortcut":["s-cook","s-nut"],
-    "instr":["s-inv","s-cook","s-clip","s-video","s-log","s-eat","s-nut","s-train"],
-    "profile":["s-nut"],
-    "s-inv":["kitchen","food"],
-    "s-cook":["food","kitchen","workout","shortcut","s-nut"],
-    "s-clip":["food","web"],
-    "s-video":["web","s-clip"],
-    "s-log":["food","kitchen","s-nut"],
-    "s-eat":["food","places"],
-    "s-nut":["workout","profile"],
-    "s-train":["workout","instr"],
-    "kitchen":["s-inv","s-cook","s-log"],
-    "workout":["s-train","s-cook","s-nut"],
-    "food":["s-cook","s-clip","s-log","s-eat","s-inv"],
-    "places":["s-eat"],
-    "web":["s-clip","s-video"]
-  };
-  var about = {
-    "app":"<b>Claude app.</b> Every request starts here. The project decides which skill handles it.",
-    "shortcut":"<b>iOS Shortcut.</b> MacroFactor stays my nutrition logger. A shortcut copies today's remaining macros as structured data so I can paste it in, instead of sending screenshots.",
-    "instr":"<b>Project instructions.</b> One file, versioned in a separate design project. It holds coaching rules and routes each kind of request to a skill or server.",
-    "profile":"<b>Nutrition profile.</b> Personal rules kept out of the skill, so the skill itself stays general and shareable.",
-    "s-inv":"<b>manage-kitchen-inventory.</b> Adds a grocery haul from a photo or receipt with realistic expiry dates, and runs the weekly review of what's expiring and low.",
-    "s-cook":"<b>suggest-what-to-cook.</b> Picks a recipe using the \"this week\" list, expiring items, recent cooking, today's training, and remaining macros. Code narrows the shortlist; the model weighs trade-offs.",
-    "s-clip":"<b>clip-recipe.</b> Saves a recipe from a page, screenshots, or a cookbook photo, reading the page's structured recipe data when it exists.",
-    "s-video":"<b>recipe-from-video.</b> Turns a cooking video into a written recipe with ingredients and timestamped steps.",
-    "s-log":"<b>log-food.</b> Logs home cooking and dining out separately, and offers to deduct what I used from the inventory.",
-    "s-eat":"<b>suggest-where-to-eat.</b> Picks three places for an occasion (where, who, budget, what's open), drawing on saved places and skipping ones I didn't like.",
-    "s-nut":"<b>check-nutrition.</b> Checks whether a meal fits my goals and what to eat around workouts. Other skills call it.",
-    "s-train":"<b>Lifting sessions.</b> No separate skill: the coaching rules in the project instructions drive it directly against workout-log.",
-    "kitchen":"<b>kitchen-inventory server.</b> Deployed on Render. Skills read and write it; the model never edits the data directly.",
-    "workout":"<b>workout-log server.</b> Deployed on Render. Holds every logged set, so weights are always read, never remembered.",
-    "food":"<b>food-journal server.</b> The dish catalog is the join point between cooking and eating out.",
-    "places":"<b>Google Places.</b> Used at the moment of recommending, to check hours and closures.",
-    "web":"<b>Recipe sources.</b> Read when clipping; the full recipe text is stored so it doesn't depend on links or subscriptions."
-  };
-  var traces = {
+  /* ---------- live stats (stats.json, written by a scheduled job; falls back to the numbers in the page) ---------- */
+  try{
+    fetch('stats.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(s){
+      if(!s) return;
+      document.querySelectorAll('[data-stat]').forEach(function(el){
+        var v=s[el.dataset.stat]; if(typeof v==='number') el.textContent=v.toLocaleString('en-US');
+      });
+      if(s.as_of){
+        var d=new Date(s.as_of+'T12:00:00');
+        if(!isNaN(d)) document.getElementById('asof').textContent='From my live databases, as of '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      }
+    }).catch(function(){});
+  }catch(e){}
+
+  /* ---------- flows ---------- */
+  var flows={
     cook:[
-      {n:["app","shortcut"],t:"I ask what to cook and paste today's remaining macros."},
-      {n:["instr","s-cook"],t:"The project routes the request to <b>suggest-what-to-cook</b>."},
-      {n:["s-cook","food"],t:"Reads the \"this week\" list and recent cooks from <b>food-journal</b> (<code>list_saved_recipes</code>, <code>get_recent</code>)."},
-      {n:["s-cook","kitchen"],t:"Asks <b>kitchen-inventory</b> what's expiring (<code>get_expiring</code>). The server does the date math."},
-      {n:["s-cook","workout"],t:"Checks today's training in <b>workout-log</b> (<code>get_training_status</code>)."},
-      {n:["s-cook"],t:"The model weighs it all and returns one recipe with full steps, plus why it fits today."}
-    ],
-    gym:[
-      {n:["app"],t:"I say I'm at the gym."},
-      {n:["instr","s-train"],t:"The project's coaching rules take over. No skill needed."},
-      {n:["s-train","workout"],t:"Picks the day from <code>get_training_status</code>, then opens a session (<code>start_session</code>)."},
-      {n:["workout"],t:"Pulls the day's exercises and my history for each (<code>get_program_day</code>, <code>get_history</code>)."},
-      {n:["s-train"],t:"The model prescribes weight, reps, and rest using double progression."},
-      {n:["app","workout"],t:"I report each set; it's logged (<code>log_set</code>) and the next instruction adjusts."}
+      {t:"I ask what to cook",d:"And paste today's remaining macros from a phone shortcut.",n:["app","shortcut"]},
+      {t:"It checks my \"this week\" list first",d:"Recipes I've already decided I want to make soon.",c:"food-journal: list_saved_recipes",n:["s-cook","food"]},
+      {t:"It asks what's about to expire",d:"The server does the date math and returns a short list, like greens with two days left.",c:"kitchen-inventory: get_expiring",n:["s-cook","kitchen"]},
+      {t:"It checks today's training",d:"A lifting day leans toward more carbs around training.",c:"workout-log: get_training_status",n:["s-cook","workout","s-nut"]},
+      {t:"The model makes the call",d:"One recipe that uses what's expiring and fits my macros, with full steps and why it fits today.",n:["s-cook"]}
     ],
     haul:[
-      {n:["app"],t:"I send a photo of my groceries."},
-      {n:["instr","s-inv"],t:"Routed to <b>manage-kitchen-inventory</b>."},
-      {n:["s-inv"],t:"The model reads the photo and assigns each item a storage location and expiry date from a shelf-life reference."},
-      {n:["s-inv","kitchen"],t:"Each item is written to <b>kitchen-inventory</b> (<code>add_item</code>)."}
+      {t:"I send a photo of my groceries",d:"No typing.",n:["app"]},
+      {t:"It reads the photo",d:"Each item gets a plain name, a storage location, and a realistic expiry date from a shelf-life reference.",n:["instr","s-inv"]},
+      {t:"Items go into the inventory",d:"Same food merges into one row, so quantities add up.",c:"kitchen-inventory: add_item",n:["s-inv","kitchen"]},
+      {t:"Days later, it remembers for me",d:"When I ask what to cook, greens with two days left are already near the top.",c:"kitchen-inventory: get_expiring",n:["kitchen","s-cook"]}
+    ],
+    gym:[
+      {t:"I say I'm at the gym",d:"I don't decide what to train. It does.",n:["app"]},
+      {t:"It picks today's session",d:"From my weekly schedule, adjusted for missed days and soreness.",c:"workout-log: get_training_status",n:["instr","s-train","workout"]},
+      {t:"It looks up my history",d:"Last session's weights and reps for every exercise, plus any form cues I saved.",c:"workout-log: get_history",n:["s-train","workout"]},
+      {t:"It tells me exactly what to lift",d:"Weight, rep range, rest, and one form cue, using double progression.",n:["s-train"]},
+      {t:"Every set is logged as I go",d:"The next instruction adjusts to what I just did.",c:"workout-log: log_set",n:["app","workout"]}
     ],
     eat:[
-      {n:["app"],t:"I ask where to eat, with where, who, and a budget."},
-      {n:["instr","s-eat"],t:"Routed to <b>suggest-where-to-eat</b>."},
-      {n:["s-eat","food"],t:"Pulls saved places and past visits from <b>food-journal</b> (<code>list_places</code>, <code>get_place</code>)."},
-      {n:["s-eat","places"],t:"Checks hours, price, and distance in <b>Google Places</b>."},
-      {n:["s-eat"],t:"Returns three picks: something new, a reliable favorite, and a wildcard."}
+      {t:"I ask where to eat",d:"With where I am, who I'm with, and a budget.",n:["app"]},
+      {t:"It searches my saved places",d:"Over a thousand restaurants I saved in Google Maps, plus my own visits and ratings.",c:"food-journal: list_places",n:["s-eat","food"]},
+      {t:"It checks what's open and nearby",d:"Hours, price, and distance, checked at the moment of recommending.",n:["s-eat","places"]},
+      {t:"Three picks",d:"Something new from my saved list, a reliable favorite, and a wildcard, skipping places I didn't like.",n:["s-eat"]}
     ]
   };
+  var about={
+    "app":"<b>Claude app.</b> Phone, desktop, or the Chrome side panel.",
+    "shortcut":"<b>iOS Shortcut.</b> Copies today's remaining macros from MacroFactor as structured text, instead of a screenshot.",
+    "instr":"<b>Project instructions.</b> One versioned file: coaching rules and which skill handles which request.",
+    "profile":"<b>Nutrition profile.</b> Personal rules kept out of the skill, so the skill stays general.",
+    "s-inv":"<b>manage-kitchen-inventory.</b> Adds groceries from a photo or receipt, and runs the weekly review of what's expiring.",
+    "s-cook":"<b>suggest-what-to-cook.</b> Code narrows the options; the model weighs the trade-offs.",
+    "s-clip":"<b>clip-recipe.</b> Saves a recipe from a page, screenshots, or a cookbook photo, keeping the full text.",
+    "s-video":"<b>recipe-from-video.</b> Turns a cooking video into a written recipe with timestamps.",
+    "s-log":"<b>log-food.</b> Logs home cooking and dining out, and deducts what I used from the inventory.",
+    "s-eat":"<b>suggest-where-to-eat.</b> Picks places for the occasion from my saved list.",
+    "s-nut":"<b>check-nutrition.</b> Checks food against my goals; other skills call it.",
+    "s-train":"<b>Coaching rules.</b> Lifting has no separate skill. The project's rules drive it directly against workout-log.",
+    "kitchen":"<b>kitchen-inventory.</b> 8 tools. The model never edits the data directly.",
+    "workout":"<b>workout-log.</b> 19 tools. Every set is stored, so weights are read, never remembered.",
+    "food":"<b>food-journal.</b> 26 tools. A shared dish catalog joins cooking and eating out.",
+    "places":"<b>Google Places.</b> Read at the moment of recommending; never stored.",
+    "web":"<b>Recipe sources.</b> The full text is stored so recipes outlive links and paywalls."
+  };
+  var uses={
+    "app":["instr"],"shortcut":["s-cook","s-nut"],"instr":["s-inv","s-cook","s-clip","s-video","s-log","s-eat","s-nut","s-train"],
+    "profile":["s-nut"],"s-inv":["kitchen","food"],"s-cook":["food","kitchen","workout","shortcut","s-nut"],
+    "s-clip":["food","web"],"s-video":["web","s-clip"],"s-log":["food","kitchen","s-nut"],"s-eat":["food","places"],
+    "s-nut":["workout","profile"],"s-train":["workout","instr"],"kitchen":["s-inv","s-cook","s-log"],
+    "workout":["s-train","s-cook","s-nut"],"food":["s-cook","s-clip","s-log","s-eat","s-inv"],"places":["s-eat"],"web":["s-clip","s-video"]
+  };
 
-  var diagram=document.getElementById('diagram');
-  var nodes=[].slice.call(document.querySelectorAll('.node'));
-  var detail=document.getElementById('detail');
-  var bar=document.getElementById('stepbar'), num=document.getElementById('stepnum'), txt=document.getElementById('steptext');
-  var prev=document.getElementById('prev'), next=document.getElementById('next'), clear=document.getElementById('clear');
-  var tbtns=[].slice.call(document.querySelectorAll('[data-trace]'));
-  var cur=null, step=0, selected=null;
+  var map=document.getElementById('map'), note=document.getElementById('mapnote');
+  var nodes=[].slice.call(map.querySelectorAll('.node'));
+  var stepsEl=document.getElementById('steps'), prev=document.getElementById('prev'), next=document.getElementById('next');
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  var cur='cook', idx=0, picked=null;
 
   function light(ids){
     var set={}; ids.forEach(function(i){set[i]=1});
-    diagram.classList.toggle('focus', ids.length>0);
-    nodes.forEach(function(n){ n.classList.toggle('on', !!set[n.dataset.id]); });
+    map.classList.toggle('focus',ids.length>0);
+    nodes.forEach(function(n){n.classList.toggle('on',!!set[n.dataset.id])});
   }
-  function select(id){
-    stopTrace();
-    if(selected===id){ selected=null; light([]); detail.innerHTML="Tap any piece to see what it connects to, or trace a request above."; return; }
-    selected=id;
+  function render(){
+    stepsEl.innerHTML='';
+    flows[cur].forEach(function(s,i){
+      var li=document.createElement('li'); li.className='step'+(i===idx?' on':'');
+      var b=document.createElement('button');
+      b.innerHTML='<b>'+s.t+'</b><span>'+s.d+'</span>'+(s.c?'<code>'+s.c+'</code>':'');
+      b.addEventListener('click',function(){idx=i;picked=null;render()});
+      li.appendChild(b); stepsEl.appendChild(li);
+    });
+    prev.disabled=idx===0; next.disabled=idx===flows[cur].length-1;
+    light(flows[cur][idx].n);
+    note.innerHTML='Tap any piece of the map to see what it is and what it connects to.';
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    cur=t.dataset.flow; idx=0; picked=null;
+    tabs.forEach(function(x){x.setAttribute('aria-selected',x===t?'true':'false')});
+    render();
+  })});
+  prev.addEventListener('click',function(){if(idx>0){idx--;render()}});
+  next.addEventListener('click',function(){if(idx<flows[cur].length-1){idx++;render()}});
+  nodes.forEach(function(n){n.addEventListener('click',function(){
+    var id=n.dataset.id;
+    if(picked===id){picked=null;render();return}
+    picked=id;
+    [].forEach.call(stepsEl.children,function(li){li.classList.remove('on')});
     light([id].concat(uses[id]||[]));
-    detail.innerHTML=about[id]||"";
-  }
-  function showStep(){
-    var s=traces[cur][step];
-    num.textContent=(step+1)+" of "+traces[cur].length;
-    txt.innerHTML=s.t;
-    prev.disabled=step===0;
-    next.disabled=step===traces[cur].length-1;
-    light(s.n);
-  }
-  function startTrace(k){
-    selected=null; cur=k; step=0;
-    tbtns.forEach(function(b){b.setAttribute('aria-pressed', b.dataset.trace===k?'true':'false')});
-    bar.classList.add('show');
-    detail.innerHTML="";
-    showStep();
-  }
-  function stopTrace(){
-    if(!cur) return;
-    cur=null; bar.classList.remove('show');
-    tbtns.forEach(function(b){b.setAttribute('aria-pressed','false')});
-    light([]);
-    detail.innerHTML="Tap any piece to see what it connects to, or trace a request above.";
-  }
-  nodes.forEach(function(n){ n.addEventListener('click', function(){ select(n.dataset.id); }); });
-  tbtns.forEach(function(b){ b.addEventListener('click', function(){ cur===b.dataset.trace ? stopTrace() : startTrace(b.dataset.trace); }); });
-  prev.addEventListener('click', function(){ if(step>0){step--;showStep();} });
-  next.addEventListener('click', function(){ if(step<traces[cur].length-1){step++;showStep();} });
-  clear.addEventListener('click', stopTrace);
-  document.addEventListener('keydown', function(e){
-    if(!cur) return;
-    if(e.key==='ArrowRight' && step<traces[cur].length-1){step++;showStep();}
-    if(e.key==='ArrowLeft' && step>0){step--;showStep();}
-    if(e.key==='Escape') stopTrace();
+    note.innerHTML=about[id]||'';
+  })});
+  render();
+
+  /* ---------- timeline (edit milestones here) ---------- */
+  var milestones=[
+    {date:"Sep 10",c:"kc",title:"First server: a kitchen inventory",
+     text:"Food kept going bad before I used it. I wrote an MCP server to track what's in my fridge, freezer, and pantry, with a Claude project that adds items from a photo of my grocery haul."},
+    {date:"Sep 18",c:"tc",title:"Second server: a workout log",
+     text:"I was losing track of my weights and spending gym time looking up exercises. A trainer project now picks each session and prescribes weights from a log of every set."},
+    {date:"Sep 23",c:"fc",title:"Third server: a food journal",
+     text:"Home cooking, restaurant visits, saved places, and saved recipes, joined by one shared dish catalog."},
+    {date:"Late Sep",c:"nc",title:"Three assistants become one system",
+     obs:"Three separate projects had duplicated rules that drifted apart, and the original names confused even me.",
+     chg:"Merged them into one project that routes each request to a skill or a database, renamed every connector and skill to say what it holds or does, and moved facts out of chat memory.",
+     res:"One copy of every rule, and a layer rule for where new things go."},
+    {date:"Sep 25",c:"tc",title:"Cardio and race plans",
+     text:"Signing up for a 10K meant runs had to fit around lifting. The database stores the plan and what's done or missed; a skill writes and adjusts it."},
+    {date:"Sep 27",c:"fc",title:"A \"this week\" list, not a meal plan",
+     obs:"I'd see a recipe I wanted to make this week, but not on a specific day.",
+     chg:"Added a \"queued\" field to saved recipes, separate from status, so a favorite can be queued without losing its rating.",
+     res:"Cooking suggestions pick from my own shortlist first. Cooking a recipe takes it off automatically.",
+     not:"days, a calendar, or a weekly reset."},
+    {date:"Sep 27",c:"fc",title:"Saving a recipe in one request",
+     obs:"Saving a RedNote recipe meant screenshots and manual pasting.",
+     chg:"Built a clipping skill that reads a page's structured recipe data first, and moved saving out of the logging skill so the two don't both fire.",
+     res:"Full recipe text is stored, so it outlives dead links and paywalls."},
+    {date:"Sep 27",c:"nc",title:"Fewer tools, clearer choices",
+     obs:"Every tool showed up twice, from a desktop config and a web connector pointing at the same servers. The model picked between them arbitrarily.",
+     chg:"Removed the duplicates, and set a rule: daily use goes through one connector, testing happens against a test database.",
+     res:"One tool per job. I also removed older tools that competed with the new \"this week\" list."},
+    {date:"Sep 29",c:"tc",title:"Workout duration that can't be wrong",
+     obs:"I closed a workout the next morning, so it recorded the wrong duration, with no way to fix it.",
+     chg:"Closing a session now takes an optional end time, and duration is derived from start and end.",
+     res:"Duration and timestamps can never disagree.",
+     not:"guessing the end from the last logged set, or auto-closing old sessions."},
+    {date:"Sep 30",c:"fc",title:"Recipes that fit my macros and my time",
+     text:"Saved recipes now carry per-serving nutrition and total time, exactly as the source publishes them and never estimated."},
+    {date:"Next",c:"nc",next:true,title:"In progress",
+     text:"Restaurant lists from other people (published guides, friends' lists) with the specific dishes they recommend, a race-training skill, and live stats on this page."}
+  ];
+  var tl=document.getElementById('timeline');
+  milestones.forEach(function(m){
+    var li=document.createElement('li'); li.className='t '+m.c+(m.next?' next':'');
+    var h='<time>'+m.date+'</time><div><h3>'+m.title+'</h3>';
+    if(m.text) h+='<p>'+m.text+'</p>';
+    if(m.obs) h+='<dl class="chain"><div><dt>Noticed</dt><dd>'+m.obs+'</dd></div><div><dt>Changed</dt><dd>'+m.chg+'</dd></div><div><dt>Result</dt><dd>'+m.res+'</dd></div></dl>';
+    if(m.not) h+='<p class="notbuilt"><b>Deliberately not built:</b> '+m.not+'</p>';
+    li.innerHTML=h+'</div>'; tl.appendChild(li);
   });
 })();
 </script>
