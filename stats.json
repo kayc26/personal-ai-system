@@ -1,32 +1,32 @@
 {
-  "as_of": "2026-10-06",
+  "as_of": "2026-10-07",
   "restaurants": 1492,
-  "recipes": 228,
-  "kitchen_items": 93,
+  "recipes": 231,
+  "kitchen_items": 91,
   "workouts": 10,
   "sets": 166,
   "tools": 53,
   "servers": {
     "kitchen-inventory": {
       "server": "kitchen-inventory",
-      "as_of": "2026-10-06",
+      "as_of": "2026-10-07",
       "tools": 8,
       "totals": {
-        "items_tracked": 93,
+        "items_tracked": 91,
         "locations": 4,
-        "expired_now": 6
+        "expired_now": 3
       },
       "monthly": []
     },
     "workout-log": {
       "server": "workout-log",
-      "as_of": "2026-10-06",
+      "as_of": "2026-10-07",
       "tools": 19,
       "totals": {
         "sessions_completed": 10,
         "sets_logged": 166,
-        "cardio_sessions": 4,
-        "cardio_km": 12.9,
+        "cardio_sessions": 5,
+        "cardio_km": 16.1,
         "undated_sessions_completed": 0,
         "undated_sets_logged": 0,
         "undated_cardio_sessions": 0,
@@ -44,14 +44,14 @@
           "month": "2026-10",
           "sessions_completed": 4,
           "sets_logged": 70,
-          "cardio_sessions": 1,
-          "cardio_km": 4.8
+          "cardio_sessions": 2,
+          "cardio_km": 8.1
         }
       ]
     },
     "food-journal": {
       "server": "food-journal",
-      "as_of": "2026-10-06",
+      "as_of": "2026-10-07",
       "tools": 26,
       "totals": {
         "places": 1492,
@@ -61,16 +61,16 @@
           "visited": 8
         },
         "places_imported": 1481,
-        "recipes": 228,
+        "recipes": 231,
         "recipes_by_status": {
-          "saved": 220,
-          "cook_again": 3,
-          "cooked": 4,
+          "saved": 222,
+          "cook_again": 5,
+          "cooked": 3,
           "dropped": 1
         },
         "recipes_full_text": 10,
         "recipes_imported": 214,
-        "home_cooks": 6,
+        "home_cooks": 7,
         "visits": 8,
         "dishes_out": 17,
         "undated_home_cooks": 0,
@@ -88,9 +88,9 @@
         },
         {
           "month": "2026-10",
-          "home_cooks": 2,
+          "home_cooks": 3,
           "visits": 3,
-          "recipes_saved": 1,
+          "recipes_saved": 4,
           "places_added": 2
         }
       ]
