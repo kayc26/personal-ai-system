@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kay Chen: a personal AI system for training, cooking, and eating out</title>
-<meta name="description" content="An AI agent I built around my own routines and use every day: three MCP servers, seven skills, and one rule about what the model should and shouldn't decide.">
+<meta name="description" content="An AI agent I built around my own routines and use every day: three MCP servers, six skills, and one rule about what the model should and shouldn't decide.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -222,7 +222,6 @@ footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);colo
         <button class="node sk kc" data-id="s-inv">manage-kitchen-inventory</button>
         <button class="node sk fc" data-id="s-cook">suggest-what-to-cook</button>
         <button class="node sk fc" data-id="s-clip">clip-recipe</button>
-        <button class="node sk fc" data-id="s-video">recipe-from-video</button>
         <button class="node sk fc" data-id="s-log">log-food</button>
         <button class="node sk fc" data-id="s-eat">suggest-where-to-eat</button>
         <button class="node sk nc" data-id="s-nut">check-nutrition</button>
@@ -342,7 +341,6 @@ footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);colo
     "s-inv":"<b>manage-kitchen-inventory.</b> Adds groceries from a photo or receipt, and runs the weekly review of what's expiring.",
     "s-cook":"<b>suggest-what-to-cook.</b> Code narrows the options; the model weighs the trade-offs.",
     "s-clip":"<b>clip-recipe.</b> Saves a recipe from a page, screenshots, or a cookbook photo, keeping the full text.",
-    "s-video":"<b>recipe-from-video.</b> Turns a cooking video into a written recipe with timestamps.",
     "s-log":"<b>log-food.</b> Logs home cooking and dining out, and deducts what I used from the inventory.",
     "s-eat":"<b>suggest-where-to-eat.</b> Picks places for the occasion from my saved list.",
     "s-nut":"<b>check-nutrition.</b> Checks food against my goals; other skills call it.",
@@ -354,11 +352,11 @@ footer{margin:84px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);colo
     "web":"<b>Recipe sources.</b> The full text is stored so recipes outlive links and paywalls."
   };
   var uses={
-    "app":["instr"],"shortcut":["s-cook","s-nut"],"instr":["s-inv","s-cook","s-clip","s-video","s-log","s-eat","s-nut","s-train"],
+    "app":["instr"],"shortcut":["s-cook","s-nut"],"instr":["s-inv","s-cook","s-clip","s-log","s-eat","s-nut","s-train"],
     "profile":["s-nut"],"s-inv":["kitchen","food"],"s-cook":["food","kitchen","workout","shortcut","s-nut"],
-    "s-clip":["food","web"],"s-video":["web","s-clip"],"s-log":["food","kitchen","s-nut"],"s-eat":["food","places"],
+    "s-clip":["food","web"],"s-log":["food","kitchen","s-nut"],"s-eat":["food","places"],
     "s-nut":["workout","profile"],"s-train":["workout","instr"],"kitchen":["s-inv","s-cook","s-log"],
-    "workout":["s-train","s-cook","s-nut"],"food":["s-cook","s-clip","s-log","s-eat","s-inv"],"places":["s-eat"],"web":["s-clip","s-video"]
+    "workout":["s-train","s-cook","s-nut"],"food":["s-cook","s-clip","s-log","s-eat","s-inv"],"places":["s-eat"],"web":["s-clip"]
   };
 
   var map=document.getElementById('map'), note=document.getElementById('mapnote');

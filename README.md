@@ -25,7 +25,7 @@ A personal agent built on Claude that runs my training, kitchen inventory, recip
 |---|---|---|
 | Interfaces | Claude app (phone, desktop, Chrome side panel); an iOS Shortcut that pastes remaining macros from MacroFactor | Where I talk to it |
 | Project | One instructions file | Role, coaching rules, routing to skills |
-| Skills (7) | manage-kitchen-inventory, suggest-what-to-cook, clip-recipe, recipe-from-video, log-food, suggest-where-to-eat, check-nutrition | Reusable procedures |
+| Skills (6) | manage-kitchen-inventory, suggest-what-to-cook, clip-recipe, log-food, suggest-where-to-eat, check-nutrition | Reusable procedures |
 | MCP servers (3, on Render) | kitchen-inventory (8 tools), workout-log (19 tools), food-journal (26 tools) | Facts and deterministic logic |
 
 ## Design principle

@@ -97,3 +97,10 @@ Design decisions for the system, newest last. Each entry names what triggered it
 ## Parked
 
 Built only when triggered: staleness tracking for inventory, gym equipment as data, coaching rules as skills, fuzzy dish matching, a nearby filter for places, run sync from Strava or Apple Health, scheduled list syncs.
+
+## recipe-from-video removed
+
+**Trigger:** it overlapped with clip-recipe on YouTube links and ended in markdown files, so video recipes never reached the food journal.
+
+- clip-recipe is the only path for saving recipes, video included. For a video whose steps aren't in the caption or description, it saves what's there and notes the gap.
+- Not built: transcript fetching. Revisit only if video recipes keep getting lost.
