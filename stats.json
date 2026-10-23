@@ -1,7 +1,7 @@
 {
-  "as_of": "2026-10-22",
+  "as_of": "2026-10-23",
   "restaurants": 1492,
-  "recipes": 242,
+  "recipes": 244,
   "kitchen_items": 103,
   "workouts": 19,
   "sets": 321,
@@ -9,24 +9,24 @@
   "servers": {
     "kitchen-inventory": {
       "server": "kitchen-inventory",
-      "as_of": "2026-10-22",
+      "as_of": "2026-10-23",
       "tools": 8,
       "totals": {
         "items_tracked": 103,
         "locations": 4,
-        "expired_now": 4
+        "expired_now": 2
       },
       "monthly": []
     },
     "workout-log": {
       "server": "workout-log",
-      "as_of": "2026-10-22",
+      "as_of": "2026-10-23",
       "tools": 19,
       "totals": {
         "sessions_completed": 19,
         "sets_logged": 321,
-        "cardio_sessions": 8,
-        "cardio_km": 27.7,
+        "cardio_sessions": 9,
+        "cardio_km": 32.6,
         "undated_sessions_completed": 0,
         "undated_sets_logged": 0,
         "undated_cardio_sessions": 0,
@@ -44,14 +44,14 @@
           "month": "2026-10",
           "sessions_completed": 13,
           "sets_logged": 225,
-          "cardio_sessions": 5,
-          "cardio_km": 19.7
+          "cardio_sessions": 6,
+          "cardio_km": 24.5
         }
       ]
     },
     "food-journal": {
       "server": "food-journal",
-      "as_of": "2026-10-22",
+      "as_of": "2026-10-23",
       "tools": 26,
       "totals": {
         "places": 1492,
@@ -61,14 +61,14 @@
           "visited": 8
         },
         "places_imported": 1481,
-        "recipes": 242,
+        "recipes": 244,
         "recipes_by_status": {
-          "saved": 231,
+          "saved": 233,
           "cook_again": 5,
           "cooked": 3,
           "dropped": 3
         },
-        "recipes_full_text": 21,
+        "recipes_full_text": 23,
         "recipes_imported": 214,
         "home_cooks": 7,
         "visits": 8,
@@ -90,7 +90,7 @@
           "month": "2026-10",
           "home_cooks": 3,
           "visits": 3,
-          "recipes_saved": 15,
+          "recipes_saved": 17,
           "places_added": 2
         }
       ]
