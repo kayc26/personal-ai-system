@@ -4,3 +4,4 @@
 *.sqlite
 .DS_Store
 .vscode/
+dist/

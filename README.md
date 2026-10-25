@@ -56,6 +56,10 @@ Full log: [docs/decisions.md](docs/decisions.md)
 - Each change is a scoped prompt to a coding agent, with an explicit "do not build" list so it doesn't add features I didn't ask for. See [docs/coding-agent-prompts.md](docs/coding-agent-prompts.md).
 - Every decision and its trade-offs go in the decision log.
 
+## Keeping skills in sync
+
+`skills/` is the source of truth. Claude.ai holds a copy uploaded by hand, so the two can drift. To check, run `python3 scripts/check_skills.py --package` in a Claude session with this repo cloned. It lists any skill that's out of date or not loaded and zips each one into `dist/` for upload.
+
 ## Status
 
 **Live:** kitchen inventory, recipe saving, the "this week" list, cooking suggestions, lifting sessions, the food journal, restaurant suggestions.
