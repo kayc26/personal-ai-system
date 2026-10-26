@@ -1,6 +1,6 @@
 ---
 name: log-home-cooking
-description: Log food Kay made or assembled herself, as cooking entries (one per dish cooked) and as meals with hunger and fullness check-ins, including leftovers eaten later. Handles cooking from a saved recipe, whether she'd cook it again, and updating kitchen-inventory after cooking. Use when she says she cooked, made, or is about to eat something she made, sends a photo of her own cooking or leftovers, adds thoughts to something she cooked, asks what recipes she'd cook again, or asks what's ready to post for 瓦克西熟了. Not for food someone else prepared (log-dining-out), packaged or whole food eaten as is (log-ready-to-eat), saving a new recipe (clip-recipe), or deciding what to cook (suggest-what-to-cook).
+description: Log food Kay made or assembled herself, as cooking entries (one per dish cooked) and as meals with hunger and satisfaction check-ins, including leftovers eaten later. Handles cooking from a saved recipe, whether she'd cook it again, and updating kitchen-inventory after cooking. Use when she says she cooked, made, or is about to eat something she made, sends a photo of her own cooking or leftovers, adds thoughts to something she cooked, asks what recipes she'd cook again, or asks what's ready to post for 瓦克西熟了. Not for food someone else prepared (log-dining-out), packaged or whole food eaten as is (log-ready-to-eat), saving a new recipe (clip-recipe), or deciding what to cook (suggest-what-to-cook).
 ---
 
 # Log home cooking
@@ -47,7 +47,7 @@ that are.
    Thoughts about one dish go to that dish's `note` or `changes` with
    `update_home_cook`.
 7. **Confirm in one line,** e.g. "Logged: 红烧肉, attempt 3, 4/5, less sugar. Hunger
-   6 -> 1, full 7, satisfying 4."
+   6 -> 1, satisfying 4."
 
 ## Leftovers
 
