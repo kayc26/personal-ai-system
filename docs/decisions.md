@@ -177,6 +177,10 @@ Design decisions for the system, newest last. Each entry names what triggered it
 - Trade-off: sources are read when the guidance is written, not on every question, so the guidance can go stale. A script will flag guidance older than its notes.
 - Compared with Google's Personal Health Agent paper, the same bet on citations, curated sources, and enforced procedure; the difference is resolving conflicts once, by me, instead of per answer by the model.
 - Add an expert only for a different view or a missing topic, not a second voice on the same one.
+- Where a rule is contested, it's anchored in a review or meta-analysis, with the expert as the practical voice. Rest between sets came out weaker than the experts suggested: the evidence clearly supports more than about a minute, and is mixed beyond that.
+- My two real coaching failures became test cases. A change to the coach ships only when both pass, run before and after.
+- Reviewing the second failure changed my mind about it: putting triceps on the pull day wasn't wrong, since my push muscles only get one session a week. What was wrong was deciding without counting sets, frequency, or time. The test checks the reasoning, not the answer.
+- Before calling a stall or trend, the coach names the time window and the number of sessions; under three is too early to say.
 
 ## Parked
 
