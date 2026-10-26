@@ -3,10 +3,9 @@
 Identical copy in log-dining-out, log-home-cooking, and log-ready-to-eat. Edit all
 three together (check_skills.py flags drift).
 
-A meal is one eating event in the food-journal: a start check-in (hunger), an end
-check-in (hunger and satisfaction), Kay's raw notes, and links to what she ate (a visit,
-home cooks). The check-ins are her mindful-eating practice, so they matter more than
-speed.
+A meal is one eating event in the food-journal: a start check-in, an end check-in,
+Kay's raw notes, and links to what she ate (a visit, home cooks). The check-ins are
+her mindful-eating practice, so they matter more than speed.
 
 ## Check for an open meal first
 
@@ -40,21 +39,24 @@ without a meal (log-dining-out).
 
 ## Start check-in
 
-One question, briefly, with tappable numbers where possible:
-"How hungry are you, 0 to 10?" (0 not at all, 5 moderately, 10 as hungry as ever)
+Ask two questions, each on its own, briefly, with tappable numbers where possible:
+1. "How hungry are you, 0 to 10?" (0 not at all, 5 moderately, 10 as hungry as ever)
+2. "How full are you right now, 0 to 10?" (0 empty, 5 comfortably satisfied,
+   10 painfully full)
 
-Then `start_meal` with the type, her answer as `hunger`, `visit_id` when there is one,
-and any notes she already gave, word for word. Don't ask about fullness.
+Then `start_meal` with the type, both answers, `visit_id` when there is one, and any
+notes she already gave, word for word.
 
 ## End check-in
 
-When she says she's done, or sends her end-of-meal batch, ask two questions, each on
+When she says she's done, or sends her end-of-meal batch, ask three questions, each on
 its own:
 1. "How hungry are you now, 0 to 10?"
-2. "How satisfying was it, 1 to 5?" (enjoyment, not how full she is)
+2. "How full, 0 to 10?"
+3. "How satisfying was it, 1 to 5?" (enjoyment, separate from fullness)
 
-Then `end_meal` with `hunger`, `satisfaction`, and her notes, word for word. Don't ask
-about fullness. `end_meal` adds notes to the meal; it never replaces them.
+Then `end_meal` with the answers and her notes, word for word. `end_meal` adds notes to
+the meal; it never replaces them.
 
 ## Tone
 
@@ -69,9 +71,9 @@ asks. Record and move on.
   2. Otherwise ask "Roughly when did you start (and finish)?" An estimate is fine.
 - Times are always a full date and time. Never log a meal at midnight because only
   the date is known.
-- Logging after the fact: ask "Before you ate, how hungry were you?", then "And
-  after?" and "How satisfying was it?", then `start_meal` with `started_at` and
-  `end_meal` with `ended_at` in one go.
+- Logging after the fact: ask the start questions as "Before you ate, how hungry were
+  you?" and so on, then `start_meal` with `started_at` and `end_meal` with `ended_at`
+  in one go.
 
 ## Notes
 

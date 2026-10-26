@@ -1,6 +1,6 @@
 ---
 name: log-dining-out
-description: Log food that someone else freshly prepared (restaurant, cafe, bakery, takeout, a friend's or family's cooking, catering) as a meal with hunger and satisfaction check-ins, plus the place, visit, and dishes when Kay wants to review it. Also saves restaurants for later and answers where she has eaten. Use when she sends a Google Maps link, a storefront or restaurant food photo, a menu photo, notes from a meal out, says she's at or ate at a place, wants to save or classify places, sends saved-places screenshots, or asks what's ready to post for Chi人在消食. Not for food she made (log-home-cooking), packaged or whole food (log-ready-to-eat), or picking where to eat (suggest-where-to-eat).
+description: Log food that someone else freshly prepared (restaurant, cafe, bakery, takeout, a friend's or family's cooking, catering) as a meal with hunger and fullness check-ins, plus the place, visit, and dishes when Kay wants to review it. Also saves restaurants for later and answers where she has eaten. Use when she sends a Google Maps link, a storefront or restaurant food photo, a menu photo, notes from a meal out, says she's at or ate at a place, wants to save or classify places, sends saved-places screenshots, or asks what's ready to post for Chi人在消食. Not for food she made (log-home-cooking), packaged or whole food (log-ready-to-eat), or picking where to eat (suggest-where-to-eat).
 ---
 
 # Log dining out
@@ -57,7 +57,7 @@ She sends what she has: menu photo, food photos, the notes she wrote during the 
 4. **Visit verdict** with `update_visit`.
 5. **End check-in** and `end_meal`, with her meal-level notes word for word.
 6. **Confirm in one line,** e.g. "Logged: Phở Duyên, 4/5, recommend. Phở 5/5, chả giò
-   3/5. Hunger 7 -> 2, satisfying 5."
+   3/5. Hunger 7 -> 2, full 8, satisfying 5."
 
 No visit (a friend's dinner, catering, or she skipped the review): the meal and its
 notes are the whole record. Dishes aren't logged without a visit.

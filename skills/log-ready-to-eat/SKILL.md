@@ -1,6 +1,6 @@
 ---
 name: log-ready-to-eat
-description: Log packaged or whole food Kay eats as it comes (a protein bar, yogurt, chips, cheese, bottled kombucha, fruit, raw nuts) as a meal with hunger and satisfaction check-ins, with product details in the notes and kitchen-inventory updated when it came from her kitchen. Use when she sends a photo of a snack, a product, a fruit, or a produce sticker, or says she's eating or ate one. Not for food someone else freshly prepared (log-dining-out) or food she made or assembled (log-home-cooking).
+description: Log packaged or whole food Kay eats as it comes (a protein bar, yogurt, chips, cheese, bottled kombucha, fruit, raw nuts) as a meal with hunger and fullness check-ins, with product details in the notes and kitchen-inventory updated when it came from her kitchen. Use when she sends a photo of a snack, a product, a fruit, or a produce sticker, or says she's eating or ate one. Not for food someone else freshly prepared (log-dining-out) or food she made or assembled (log-home-cooking).
 ---
 
 # Log ready-to-eat food
@@ -30,7 +30,7 @@ cut fruit into a bowl with yogurt and granola, she assembled it: that's homemade
    if it's finished) by its generic inventory name, without asking. If the name isn't
    found, use a suggested match that fits, or skip it silently if nothing does.
 6. **End check-in** and `end_meal`.
-7. **Confirm in one line,** e.g. "Logged: Honeycrisp apple. Hunger 4 -> 2,
+7. **Confirm in one line,** e.g. "Logged: Honeycrisp apple. Hunger 4 -> 2, full 3,
    satisfying 4."
 
 ## Fixing
