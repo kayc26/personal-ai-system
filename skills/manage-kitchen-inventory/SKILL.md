@@ -10,8 +10,9 @@ the weekly review catches what slipped through: snacks, food eaten straight from
 fridge, and things thrown out.
 
 Data comes from the kitchen-inventory connector, plus food-journal for the "this week"
-recipe list in the weekly review. Deducting ingredients after a home-cooked meal is
-handled by log-food, not here.
+recipe list in the weekly review. Deducting ingredients after cooking, storing
+leftovers, and using up leftovers or snacks are handled by log-home-cooking and
+log-ready-to-eat when she logs them, not here.
 
 ## Grocery haul or receipt
 

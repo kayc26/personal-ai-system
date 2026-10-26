@@ -9,6 +9,9 @@ the two can drift. Run this from a Claude session that has this repo cloned:
 
 Each zip in dist/ is ready to upload in claude.ai's skill settings, replacing
 the loaded version.
+
+It also fails when shared reference files (marked "Identical copy") differ between
+skills, and flags any skill listed in skills/RETIRED.txt that is still loaded.
 """
 import argparse
 import filecmp
@@ -18,6 +21,7 @@ from pathlib import Path
 
 REPO_SKILLS = Path(__file__).resolve().parent.parent / "skills"
 DIST = REPO_SKILLS.parent / "dist"
+RETIRED = REPO_SKILLS / "RETIRED.txt"  # skill names that must no longer be loaded
 
 
 def files(root: Path) -> set[str]:
@@ -29,6 +33,29 @@ def differs(a: Path, b: Path) -> bool:
     if fa != fb:
         return True
     return any(not filecmp.cmp(a / f, b / f, shallow=False) for f in fa)
+
+
+def shared_copies_drift() -> list[str]:
+    """Reference files that say "Identical copy" must match across skills."""
+    groups: dict[str, list[Path]] = {}
+    for ref in REPO_SKILLS.glob("*/references/*"):
+        if ref.is_file() and "Identical copy" in ref.read_text()[:500]:
+            groups.setdefault(ref.name, []).append(ref)
+    problems = []
+    for name, copies in sorted(groups.items()):
+        first = copies[0]
+        for other in copies[1:]:
+            if not filecmp.cmp(first, other, shallow=False):
+                problems.append(f"{name}: {first.parent.parent.name} and "
+                                f"{other.parent.parent.name} differ")
+    return problems
+
+
+def retired_names() -> list[str]:
+    if not RETIRED.is_file():
+        return []
+    return [l.split("#")[0].strip() for l in RETIRED.read_text().splitlines()
+            if l.split("#")[0].strip()]
 
 
 def main() -> int:
@@ -44,6 +71,17 @@ def main() -> int:
         print(f"No loaded skills at {loaded}. Run this inside a Claude session.")
         return 2
 
+    drift = shared_copies_drift()
+    for problem in drift:
+        print(f"{'DRIFT':12} {problem}")
+    if drift:
+        print("Shared reference copies must be identical. Fix the repo first.\n")
+        return 1
+
+    still_loaded = [n for n in retired_names() if (loaded / n).is_dir()]
+    for name in still_loaded:
+        print(f"{'RETIRED':12} {name} (delete it in claude.ai)")
+
     stale = []
     for skill in sorted(p for p in REPO_SKILLS.iterdir() if p.is_dir()):
         target = loaded / skill.name
@@ -57,9 +95,12 @@ def main() -> int:
         if status != "ok":
             stale.append(skill)
 
-    if not stale:
+    if not stale and not still_loaded:
         print("\nAll loaded skills match the repo.")
         return 0
+    if not stale:
+        print(f"\n{len(still_loaded)} retired skill(s) still loaded.")
+        return 1
 
     print(f"\n{len(stale)} skill(s) need uploading.")
     if args.package:

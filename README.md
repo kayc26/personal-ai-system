@@ -25,8 +25,8 @@ A personal agent built on Claude that runs my training, kitchen inventory, recip
 |---|---|---|
 | Interfaces | Claude app (phone, desktop, Chrome side panel); an iOS Shortcut that pastes remaining macros from MacroFactor | Where I talk to it |
 | Project | One instructions file | Role, coaching rules, routing to skills |
-| Skills (6) | manage-kitchen-inventory, suggest-what-to-cook, clip-recipe, log-food, suggest-where-to-eat, check-nutrition | Reusable procedures |
-| MCP servers (3, on Render) | kitchen-inventory (8 tools), workout-log (19 tools), food-journal (26 tools) | Facts and deterministic logic |
+| Skills (9) | coach-training, manage-kitchen-inventory, suggest-what-to-cook, clip-recipe, log-dining-out, log-home-cooking, log-ready-to-eat, suggest-where-to-eat, check-nutrition | Reusable procedures |
+| MCP servers (3, on Render) | kitchen-inventory (8 tools), workout-log (19 tools), food-journal (30 tools) | Facts and deterministic logic |
 
 ## Design principle
 
@@ -58,7 +58,7 @@ Full log: [docs/decisions.md](docs/decisions.md)
 
 ## Keeping skills in sync
 
-`skills/` is the source of truth. Claude.ai holds a copy uploaded by hand, so the two can drift. To check, run `python3 scripts/check_skills.py --package` in a Claude session with this repo cloned. It lists any skill that's out of date or not loaded and zips each one into `dist/` for upload.
+`skills/` is the source of truth. Claude.ai holds a copy uploaded by hand, so the two can drift. To check, run `python3 scripts/check_skills.py --package` in a Claude session with this repo cloned. It lists any skill that's out of date or not loaded and zips each one into `dist/` for upload. It also fails if shared reference files (marked "Identical copy") differ between skills, and flags any skill in `skills/RETIRED.txt` that's still loaded, so it can be deleted in claude.ai.
 
 ## Status
 

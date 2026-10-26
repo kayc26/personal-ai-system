@@ -1,0 +1,2 @@
+# Skills removed from the repo that must also be deleted in claude.ai.
+log-food  # split into log-dining-out, log-home-cooking, log-ready-to-eat (2026-10-25)

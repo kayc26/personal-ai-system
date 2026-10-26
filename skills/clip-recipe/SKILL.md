@@ -11,7 +11,7 @@ and have it saved with nothing else to do. You know what to collect; don't ask h
 for it.
 
 This skill only saves recipes. Logging a cook, answering "which recipes have I tried",
-and statuses after cooking belong to log-food. "What should I cook" belongs to
+and statuses after cooking belong to log-home-cooking. "What should I cook" belongs to
 suggest-what-to-cook.
 
 ## What to collect
