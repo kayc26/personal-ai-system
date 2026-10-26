@@ -17,6 +17,7 @@ A personal agent built on Claude that runs my training, kitchen inventory, recip
 - **Recipes:** I save a recipe from a link, screenshots, a cookbook photo, or a cooking video. It stores the full recipe, plus nutrition and cook time when the source lists them. Recipes I want to make go on a "this week" list.
 - **What to cook:** it picks from the "this week" list based on what's expiring, what I cooked recently, today's training, and my remaining macros, then gives me a recipe I can follow.
 - **Training:** when I get to the gym, it picks the day's session, prescribes the weight for each exercise from my history, and logs every set as I go.
+- **Meals:** every time I eat, it asks how hungry and how full I am before and after, and how satisfying the meal was. It's a mindful-eating habit, and later I can compare satisfaction with macros. Restaurant meals, home cooking, and snacks each have their own skill, chosen by who prepared the food.
 - **Eating out:** it keeps a journal of what I've cooked and eaten. When I need a restaurant, it picks from my saved places for the occasion and skips places I didn't like.
 
 ## How it's built
