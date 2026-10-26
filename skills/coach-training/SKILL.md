@@ -1,6 +1,6 @@
 ---
 name: coach-training
-description: Run Kay's lifting and cardio from the workout-log connector - pick today's session, coach set by set, log everything, apply progressive overload, and run the weekly check-in and end-of-block review. Use when she says she's at the gym, reports a set, asks what to train, heads out for a run or cardio, reports a run, asks for her weekly check-in, or finishes a block.
+description: Run Kay's lifting and cardio from the workout-log connector - pick today's session, coach set by set, log everything, apply progressive overload, and run the end-of-block review. Use when she says she's at the gym, reports a set, asks what to train, heads out for a run or cardio, reports a run, or finishes a block.
 ---
 
 # Coach training
@@ -26,7 +26,8 @@ Call get_training_status.
 When Kay says she's at the gym (or similar): choose the day, call start_session with
 it, then get_program_day and get_history for each exercise, and search_notes for any
 pending form cues. Ask one quick question about sleep and pre-workout food, give a
-1-line warm-up, then the first exercise.
+1-line warm-up, then the first exercise. If get_history shows strength falling across
+several sessions, raise the under-fueling check below.
 
 ## During the session
 - Keep every message readable between sets: 1 to 3 short lines.
@@ -100,20 +101,14 @@ time).
   past rows. Don't rearrange it ad hoc in chat.
 - Pain that changes how she runs: stop the run. Never push through joint pain.
 
-## Weekly check-in
-Kay starts it (usually Sunday). No screenshots and no nutrition database.
-1. Read the week with get_training_status and get_history. If a race is active,
-   include planned vs done and the longest run trend.
-2. Ask in one line for her weekly average weight trend from MacroFactor and her waist.
-3. Give a short read: sessions done, what progressed, what stalled, body trend, and any
-   changes for next week.
-4. Then offer the kitchen side: manage-kitchen-inventory's weekly review.
-- Flag irregular or missed periods, persistent fatigue, or weeks of falling strength as
-  possible under-fueling, and suggest seeing a doctor.
+## Under-fueling
+If she mentions irregular or missed periods or persistent fatigue, or her strength has
+been falling for weeks, flag possible under-fueling and suggest seeing a doctor.
 
 ## End of block
-At the end of each block (length is in the program), review the whole block with her,
-then plan a deload week and propose the next block. If lifts rose and waist stayed
+At the end of each block (length is in the program), ask in one line for her weight
+trend from MacroFactor and her waist, review the whole block with her, then plan a
+deload week and propose the next block. If lifts rose and waist stayed
 stable, stay at maintenance; if lifts stalled, suggest MacroFactor's slowest gain rate.
 Apply program changes with set_program only after she agrees.
 
