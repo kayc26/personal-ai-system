@@ -94,9 +94,6 @@ Design decisions for the system, newest last. Each entry names what triggered it
 - Dish matching in code is exact or alias only. Fuzzy matching waits until misses are real.
 - Restaurants and recipes stay in one server and one database, because the dish catalog joins them. If tool choice degrades, split the tool surface, not the data.
 
-## Parked
-
-Built only when triggered: staleness tracking for inventory, gym equipment as data, coaching rules as skills, fuzzy dish matching, a nearby filter for places, run sync from Strava or Apple Health, scheduled list syncs.
 
 ## recipe-from-video removed
 
@@ -104,3 +101,83 @@ Built only when triggered: staleness tracking for inventory, gym equipment as da
 
 - clip-recipe is the only path for saving recipes, video included. For a video whose steps aren't in the caption or description, it saves what's there and notes the gap.
 - Not built: transcript fetching. Revisit only if video recipes keep getting lost.
+
+## Live stats on the showcase page
+
+**Trigger:** the page's usage numbers were counted by hand once, with no fixed definitions, and went stale.
+
+- Each server exposes a read-only stats endpoint with its own counts. No server reads another's database.
+- A scheduled GitHub Action snapshots the counts daily into a JSON file the page reads. Visitors never wait on a cold server.
+- Monthly history comes from existing timestamps; bulk imports are counted separately so they don't show as one spike.
+- Not built: auth on the endpoint (counts only), caching, a dashboard.
+
+## Training procedure moved into a skill
+
+**Trigger:** about 70% of the project instructions were training procedure, loaded on every message, including food and kitchen ones.
+
+- A coach-training skill holds session choice, set-by-set coaching, progression, cardio, and the end-of-block review. The instructions shrank to role, routing, and global rules.
+- The weekly check-in was dropped. Body weight, waist, and calorie targets stay in MacroFactor; no skill asks for them.
+- The layer rule changed in practice: instructions hold routing and global rules, not procedure.
+
+## Skills live in this repo
+
+**Trigger:** skills existed only in my Claude account, with no history and no way to tell whether the loaded copy was current.
+
+- `skills/` is the source of truth. A script compares it with the loaded skills and zips anything out of date for upload.
+- Skills are uploaded as zips built from the repo, never from a proposal card (a card stores a shortened description).
+- Skills that share rules keep identical reference files; the script fails if the copies drift.
+- Removed skills are listed in `skills/RETIRED.txt`, and the script flags any still loaded. New and retired skills go up in the same sitting so they never compete.
+
+## Meals and mindful-eating check-ins
+
+**Trigger:** logging food meant questions mid-meal, I wanted to practice mindful eating, and later I want to compare how satisfying meals are with their macros.
+
+- A meal is its own record, separate from a home cook (one dish cooked once) and a visit (one trip to a food place). One pot can feed several meals; one dinner can include several dishes. Meals link to both.
+- Meal type answers one question, who prepared the food, in a fixed order where the first match wins: prepared, packaged, whole, homemade. No catch-all: if nothing fits, Claude asks. Near-zero-calorie drinks aren't meals.
+- Every meal gets hunger and fullness at the start, and hunger, fullness, and satisfaction at the end, asked as separate questions, recorded without judgment.
+- Only one meal can be open at a time, enforced in the database. While it's open, food photos and notes go to it, and its type decides which skill handles them.
+- Times are always a full date and time; a date-only meal would land at midnight and break the time-based analysis.
+- Numbers are always asked, never inferred. A snack once got a 5/5 guessed from a comparison in my note; the rule came from that.
+- One logging skill became three, one per group of meal types, so routing is mechanical.
+- No macros stored: MacroFactor's data export already has per-entry times and macros, so the later analysis is one join.
+- Not built: a products record, meal-occasion fields (derived from the start time later), auto-closing forgotten meals, a separate rating field for snacks.
+
+## Tests never touch production
+
+**Trigger:** a coding agent's first test run for the meals change wrote test rows to the live database.
+
+- Tests read a separate test database variable and refuse to run against the production endpoint.
+- A permanent test branch of the database is reset from production before each task, so tests run on a fresh copy of real data.
+
+## Recommender lists, revised
+
+**Trigger:** the step 0 review of the recommender change, before anything was built.
+
+- Lists are recommender-only (Michelin Guide, YouTube creators). My own Google Maps lists are how I organized saves, which status, city, and cuisine already capture, so they don't become lists, and I'm not a recommender.
+- Two signals kept apart: status is my intent (want to go, been); a list is someone else's endorsement. A place only on recommender lists is "recommended, not saved", even if I copied the list into Google Maps.
+- Places with list entries survive deleting a visit.
+- "Been" (went before I started logging) isn't bulk-converted to "visited", which requires a logged visit. Fake dates and empty ratings would look like evidence. I backfill the ones I remember.
+- Picking a restaurant becomes three layers: recommenders supply candidates, I promote the ones I like, and the picker chooses from those, citing who recommended it and what to order.
+
+## Race training dropped
+
+**Trigger:** running isn't a priority, and the 10k plan was being scheduled separately from lifting.
+
+- The race was closed and its planned runs cleared. Cardio is general conditioning, planned together with lifting.
+- The planned race-planning skill won't be built. The cardio logging tools stay.
+
+## Expert-grounded coaching
+
+**Trigger:** the coach was too rigid in some places and improvised in others. It scheduled an afternoon lifting session after a morning 8K, and when I dropped it, suggested moving triceps work to my pull day.
+
+- Advice comes from named experts I chose (Jeff Nippard, Dr. Andy Galpin, Dr. Stacy Sims, Dr. Lauren Colenso-Semple, Dr. Kristen Holmes), not from the model's general knowledge.
+- Each expert gets one neutral note, in my own words with sources: only what they say, training and nutrition together, nothing about me. Lines from secondary sources are flagged for checking. These live in a private repo.
+- Separate guidance files for training and nutrition apply the notes to me. That's where conflicts between experts are resolved, once, with a line saying who won and why, so two runs can't disagree. Skills read only the guidance.
+- The training skill keeps procedure (running a session, planning the week, the steps for any program change) and takes its numbers from the guidance.
+- Trade-off: sources are read when the guidance is written, not on every question, so the guidance can go stale. A script will flag guidance older than its notes.
+- Compared with Google's Personal Health Agent paper, the same bet on citations, curated sources, and enforced procedure; the difference is resolving conflicts once, by me, instead of per answer by the model.
+- Add an expert only for a different view or a missing topic, not a second voice on the same one.
+
+## Parked
+
+Built only when triggered: staleness tracking for inventory, gym equipment as data, fuzzy dish matching, a nearby filter for places, run sync from Strava or Apple Health, scheduled list syncs, a products record for packaged food, a rating field for snacks, stall detection in code, fixing mislocated imported places (they correct themselves when looked up).
