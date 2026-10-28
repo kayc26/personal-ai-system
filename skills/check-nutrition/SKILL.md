@@ -6,9 +6,9 @@ description: "Check food choices against a person's nutrition rules, using their
 # Check Nutrition
 
 Turn a person's nutrition rules into practical food choices. This skill holds the
-method only. Everything about the person (goals, conditions, preferences, which data
-tools they use) lives in their nutrition profile, so the skill can be shared without
-carrying anyone's personal information.
+method and the rules. The person's objective facts (sex, age, height, training
+experience, medical conditions, approved supplements) live in their nutrition
+profile, so the skill can be shared without carrying anyone's personal information.
 
 Picking what to cook or where to eat belongs to other skills (suggest-what-to-cook,
 suggest-where-to-eat). They call this skill to judge their options.
@@ -17,18 +17,15 @@ suggest-where-to-eat). They call this skill to judge their options.
 
 Look for a file named `NUTRITION_PROFILE.md` in the project files (`/mnt/project/`).
 
-- **Found:** read it. It says which modules apply, the person's personal rules, and
-  their data tools.
+- **Found:** read it. It holds facts only, no rules. Pick the modules from the facts:
+  - prediabetes, insulin resistance, or a stated wish for steadier blood sugar:
+    Glucose management
+  - lifts regularly or wants to build muscle: Strength training
+  - a woman who trains regularly: Active women
 - **Not found:** say in one line that no profile is available here. Apply only what
   they state in the message, or offer to build a profile with a few quick questions:
-  basics (sex, height, training experience, goals), which modules apply, health
-  conditions and what a doctor handles, approved supplements, where targets come
-  from, routine, personal rules, likes and dislikes, data tools, and style. Never
-  guess at health conditions.
-
-Personal rules in the profile override module defaults when they conflict. They exist
-because a general rule doesn't fit this person (for example, a lean person managing
-glucose should not be pushed toward low-carb eating).
+  sex, age, height, training experience, health conditions and what a doctor handles,
+  approved supplements, food intolerances. Never guess at health conditions.
 
 ## Step 2: Get today's context
 
@@ -41,15 +38,18 @@ Only when it changes the answer:
   foods, check `list_inventory` (all locations) and build from what's there,
   favoring items close to expiry. If a protein staple is running low
   (`check_low_stock`), mention it in one line.
-- **Targets:** calorie and macro targets come from the person's tracking app, never
-  from you. Follow the profile on how to read them (for example, a pasted "Macros
-  Remaining" export). If none are given, answer without numbers.
+- **Targets:** calorie and macro targets come from MacroFactor, never from you. On
+  food questions, ask once for the "Macros Remaining" paste; if it isn't given, answer
+  without macros and don't ask again. In the pasted JSON, read
+  `remaining.<nutrient>.target` as what's left (negative means past target) and
+  `remaining.<nutrient>.maximum` as headroom under a cap. Ignore amino acids
+  (incomplete).
 
 If a tool isn't available, say so in a few words and answer without it.
 
 ## Step 3: Apply the rules
 
-Judge the meal, recipe, or idea against the profile and the modules it lists, and
+Judge the meal, recipe, or idea against the profile's facts and the modules picked, and
 give practical changes, not lectures:
 
 - **Lead with the answer:** fits well, fits with a tweak, or better another time
@@ -61,12 +61,12 @@ give practical changes, not lectures:
 - **Respect what they want to eat.** If they want to try a new or indulgent recipe,
   help it fit (pairing, timing, a post-meal walk) rather than steering them away. Most
   meals matter more than any single one.
-- **Explain briefly when useful**, especially when a change on the scale or in the
-  mirror is likely water, not fat.
+- **Explain briefly when useful.** Don't comment on body weight, waist, or
+  appearance; those are tracked in MacroFactor.
 
 ## Modules
 
-Apply only the modules the profile lists. Evidence levels in brackets.
+Apply only the modules picked in Step 1. Evidence levels in brackets.
 
 ### Glucose management
 For prediabetes, insulin resistance, or anyone wanting steadier blood sugar.
@@ -86,8 +86,8 @@ For prediabetes, insulin resistance, or anyone wanting steadier blood sugar.
 - **Monitor readings.** If they share glucose readings, help interpret patterns in
   plain terms. Never adjust medication or diagnose.
 - **Retesting.** Encourage following their doctor's retesting schedule (e.g. A1c).
-- Don't default to low-carb advice. Whether carbs should be reduced depends on the
-  person, which the profile decides.
+- Don't default to low-carb advice. Reducing carbs is the doctor's call, not this
+  skill's.
 
 ### Strength training
 For people who lift regularly or want to build muscle.
@@ -108,8 +108,6 @@ For people who lift regularly or want to build muscle.
   if it affects sleep. [Well established]
 - **Hydration.** Consistent through the day; bring water to sessions. [Well
   established]
-- **Muscle gain phases.** Gain slowly and watch the person's chosen signal of fat gain;
-  consistent sodium and hydration make that signal easier to read.
 
 ### Active women
 For women who train regularly.
@@ -154,4 +152,4 @@ The modules hold well-supported defaults. When a question goes beyond them:
 ## Style
 
 Short and practical unless they ask for depth. Give real food examples, not just
-macro numbers. Match the user's language. Follow any style rules in the profile.
+macro numbers. Match the user's language. No em dashes.
