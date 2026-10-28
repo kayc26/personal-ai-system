@@ -41,3 +41,4 @@ asking.
 | Date | Skill commit | Case 1 | Case 2 | Notes |
 |---|---|---|---|---|
 | 2026-10-28 | f25f2c2 (before) | Fail | Fail | 1: swapped in Upper B that afternoon and moved Lower B to the next day; offered a trimmed Lower B as the alternative. 2: gave the new totals (8 side delt, 8 to 9 triceps sets) but not the current ones, didn't half-count pressing for triceps; reasons and a 60-minute check were there, and it asked first, but it's mid-block and it proposed starting today. |
+| 2026-10-28 | c45bc7d (after) | Pass | Pass | 1: no lifting, Lower B moved, no leg day next morning. But it planned runs from a stale cardio line in the program description (Thu run, Sun long run), and offered Lower A on the Monday after that long run, against its own rule. 2: correct counts (side delts 4.5, triceps 6.5, once a week), next block, waits; new totals 9.5 still under 10 and not flagged; time check hedged instead of reading logged session lengths. |
