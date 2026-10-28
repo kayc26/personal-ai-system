@@ -28,11 +28,36 @@ def files(root: Path) -> set[str]:
     return {str(p.relative_to(root)) for p in root.rglob("*") if p.is_file()}
 
 
+def normalized(p: Path) -> str:
+    """SKILL.md saved from a review card quotes frontmatter values and drops the
+    final newline; neither changes the skill, so ignore both."""
+    text = p.read_text().rstrip()
+    if p.name != "SKILL.md" or not text.startswith("---"):
+        return text
+    head, sep, body = text[3:].partition("\n---")
+    lines = []
+    for line in head.strip().splitlines():
+        key, colon, value = line.partition(":")
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] == '"':
+            value = value[1:-1].replace('\\"', '"')
+        lines.append(f"{key}{colon} {value}" if colon else line)
+    return "---\n" + "\n".join(lines) + sep + body
+
+
 def differs(a: Path, b: Path) -> bool:
     fa, fb = files(a), files(b)
     if fa != fb:
         return True
-    return any(not filecmp.cmp(a / f, b / f, shallow=False) for f in fa)
+    for f in fa:
+        if filecmp.cmp(a / f, b / f, shallow=False):
+            continue
+        try:
+            if normalized(a / f) != normalized(b / f):
+                return True
+        except UnicodeDecodeError:
+            return True
+    return False
 
 
 def shared_copies_drift() -> list[str]:
