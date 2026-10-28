@@ -192,6 +192,17 @@ Design decisions for the system, newest last. Each entry names what triggered it
 - A separate meal-planning file described a different weekly plan than the cooking skill and no skill read it. It was deleted; the skill's "this week" list is the one model.
 - Packaging is a direction, not a build. Not built yet: skills free of my name and specifics, a skill that builds someone's guidance from the experts they pick, and servers that hold more than one person's data.
 
+## Skills hold procedure, guidance holds the numbers
+
+**Trigger:** the rewritten coach still repeated a few numbers from its guidance, and swapping an expert would have meant editing the skill.
+
+- The training skill holds procedure only: which tools to call, in what order, and what to show. Every number and principle comes from a guidance file.
+- Guidance files are separate project files, not bundled inside the skill, so updating guidance never means re-uploading a skill, and the skill reads the same for anyone.
+- The coach never reads the expert notes directly. Synthesis happens once, when guidance is written, so two chats can't weigh the experts differently.
+- My own planning choices (when a cardio session counts as the day's training, how long a set takes) sit in the guidance too, labeled as mine rather than as expert rules.
+- Planned, not built: a skill that rebuilds guidance from the experts I pick and asks me to settle conflicts. It comes with the nutrition guidance, its first real use.
+- The rewrite fixes the two failures directly: long or hard cardio counts as the day's training, and every program change counts current sets (helper sets at half), checks time, and waits for the next block.
+
 ## Parked
 
 Built only when triggered: staleness tracking for inventory, gym equipment as data, fuzzy dish matching, a nearby filter for places, run sync from Strava or Apple Health, scheduled list syncs, a products record for packaged food, a rating field for snacks, stall detection in code, fixing mislocated imported places (they correct themselves when looked up), user-agnostic skills, a guidance-building skill, multi-user servers.
