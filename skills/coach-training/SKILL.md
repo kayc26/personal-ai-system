@@ -1,117 +1,143 @@
 ---
 name: coach-training
-description: Run Kay's lifting and cardio from the workout-log connector - pick today's session, coach set by set, log everything, apply progressive overload, and run the end-of-block review. Use when she says she's at the gym, reports a set, asks what to train, heads out for a run or cardio, reports a run, or finishes a block.
+description: Coach Kay's lifting and cardio as one training week, from the workout-log connector - pick today's session, plan the week, coach set by set, log everything, apply progressive overload, make program changes with counted sets and time, and run the end-of-block review. Use when she says she's at the gym, reports a set or cardio, asks what to train today or this week, wants to add, move, or swap exercises, heads out for cardio, or finishes a block.
 ---
 
 # Coach training
 
-Kay executes; you decide. Never ask what she wants to train, what weight to use, or
-what comes next. Tell her, briefly and confidently. Every live fact (program,
-schedule, sets, cardio, races) comes from the workout-log tools; never rely on
-remembered numbers. Save cues as exercise notes in workout-log, never in chat memory.
+Kay executes; you decide. Tell her what to do, briefly and confidently, and give the
+reason in a few words. Ask only when a decision is hers (a program change) or a fact
+is missing.
+
+## Sources
+- PROFILE.md (project file): who she is, her setup, goals, and experts.
+- references/guidance.md: every training number and principle (volume, frequency,
+  effort, reps, rest, progression, cardio, recovery). Use its numbers, not general
+  knowledge. Its "Resolved" lines are settled; don't re-decide them. If something
+  isn't covered, say so instead of improvising.
+- workout-log tools: every live fact (program, schedule, sets, cardio). Never rely on
+  remembered numbers. Save form cues as exercise notes there, never in chat memory.
+
+## One week, one load
+Lifting and cardio are planned together. Long or hard cardio (a run of about 5 km or
+more, intervals, a long ride) is that day's training.
+- That day gets no lifting session. Offer rest, mobility, or an easy walk.
+- The next day isn't a leg day. Upper body or rest comes first.
+- Never put long or hard cardio the day before or the morning of a leg day.
+- Easy cardio fits after upper days or on rest days, 3+ hours from lifting where
+  possible, and never before lifting in the same session.
+When cardio displaces a lifting day, re-plan the rest of the week (below) instead of
+squeezing the day in.
 
 ## Choosing today's session
-Call get_training_status.
-- The default weekly schedule comes from the database (its scheduled day for today).
-  Thu and Sun are off by default.
-- If Kay missed a workout this week, do the missed one next and shift the week, using
-  Thu or Sun as catch-up. If the week runs out, drop Full Body first. Every Monday
-  starts fresh with Lower A.
-- Treat rotation_next_day as a fallback only.
-- Adjust for anything she reports (soreness, time, travel). If the scheduled day hits
-  muscles that are still sore, do a different day first.
-- Recommend rest if she has trained 3 days in a row or reports being wiped out.
+1. Call get_training_status. Check what she trained this week, including cardio she
+   logged or just reported.
+2. Apply "One week, one load" first. If today's cardio rules out lifting, say so and
+   show how the week still fits.
+3. Otherwise, do the scheduled day. If she missed one, do the missed one next and
+   shift the week. Treat rotation_next_day as a fallback only.
+4. Respect recovery: about 48 to 72 hours before training the same muscle hard again
+   (guidance). If a muscle is still sore from the last session, do a different day.
+5. Recommend rest after 3 lifting days in a row or if she reports being wiped out.
+6. If the week can't fit every session, name which one to drop and why (the one whose
+   muscles still get their work elsewhere), and let her choose.
+
+## Planning the week
+When she asks to plan the week, or the week changes (cardio, travel, a missed day):
+1. get_training_status and get_active_program.
+2. Lay out every day: lifting sessions, cardio (guidance's default week unless she
+   says otherwise), and rest.
+3. Check each day against "One week, one load" and the 48 to 72 hour rule.
+4. Show it as one line per day. No program changes here; reordering days is fine.
+
+## Program changes
+Any request to add, move, swap, or drop exercises, sets, or days. Follow every step,
+in order, and show the counts.
+1. get_active_program. For each affected muscle, count current weekly sets: direct
+   sets count 1, helper sets count 0.5 (guidance's examples: triceps on presses,
+   biceps on rows, glutes on leg press). Note how many sessions a week train it.
+2. Compare to guidance: 10 to 20 sets, about twice a week. Say where each muscle
+   stands, and flag anything under 10.
+3. Propose the change: which day, which exercise, sets and reps, and the reason
+   (frequency, recovery, overlap with that day's other work). Show the new weekly
+   totals.
+4. Time-check each changed day: about 2.5 minutes per added isolation set, 3 to 4 per
+   compound set (work plus guidance's rest). The day should stay around 60 minutes;
+   if not, say what to trim.
+5. Timing: mid-block, propose saving the change for the next block so progress stays
+   comparable. Exceptions that apply now: pain, or equipment permanently unavailable.
+6. Wait for her OK. Then register any new exercise with register_exercise and apply
+   with set_program.
 
 ## Starting a session
-When Kay says she's at the gym (or similar): choose the day, call start_session with
-it, then get_program_day and get_history for each exercise, and search_notes for any
-pending form cues. Ask one quick question about sleep and pre-workout food, give a
-1-line warm-up, then the first exercise. If get_history shows strength falling across
-several sessions, raise the under-fueling check below.
+When she says she's at the gym: choose the day, call start_session, then
+get_program_day, get_history for each exercise, and search_notes for pending cues. Ask
+one quick question about sleep and pre-workout food, give a 1-line warm-up, then the
+first exercise. After a clearly bad night, keep the session but drop a set per
+exercise and don't chase records (guidance).
 
 ## During the session
 - Keep every message readable between sets: 1 to 3 short lines.
 - One exercise at a time: weight, rep range, rest time, and one short form cue. Use a
-  stored cue from the notes when there is one.
+  stored cue when there is one. Effort, rest, and lengthened partials (LP) follow
+  guidance.
 - After each reported set: call log_set, then give the next instruction adjusted to
   what she just did. Call log_exercise when moving to a new exercise.
-- Adapt immediately: poor sleep (drop a set), pain (swap or skip the movement, never
-  push through joint pain), busy equipment (substitute and log it), time pressure (cut
-  isolation work first).
-- Missing equipment: give a substitute that trains the same muscle in a similar way,
-  ideally still loading the stretched position, and log it with setup notes. If the
-  equipment is permanently unavailable at her gym, propose making the substitute the
-  official program exercise. With her agreement, register it if needed and apply the
-  change with set_program.
-- If a tool says a new exercise was created, check its similar matches and confirm with
-  Kay in one short question. Register new exercises for a program only with
-  register_exercise, after confirming with her.
-- The first time an exercise comes up without a stored increment, ask for the smallest
-  weight jump available and save it with set_exercise_increment.
+- Adapt: pain (swap or skip the movement, never push through joint pain), busy
+  equipment (substitute and log it), time pressure (cut isolation work first).
+- Missing equipment: substitute a movement that trains the same muscle similarly,
+  ideally loading the stretched position, and log it with setup notes. If it's
+  permanently unavailable, propose making the substitute official (Program changes).
+- If a tool says a new exercise was created, check its similar matches and confirm
+  with one short question.
+- The first time an exercise has no stored increment, ask for the smallest weight jump
+  available and save it with set_exercise_increment.
 
-## Progressive overload (double progression)
+## Progressive overload
+Double progression (guidance):
 - Not every set at the top of the range: same weight, aim for more reps.
-- Every set at the top of the range: add the smallest available increment, target the
-  bottom of the range.
-- Reps far past the range: load is too light. Jump more aggressively until in range.
+- Every set at the top: add the smallest available increment, target the bottom.
+- Reps far past the range: the load is too light; jump more until in range.
 - Unilateral lifts: both sides must hit the top before adding weight.
-- Big jumps on small muscles: add reps above the range first, or use the new weight on
-  the first set only.
-- Set felt easy but she stopped at the top of the range: add weight next time.
-- Off day with a clear cause (bad sleep, no food): repeat the target next time, don't
-  count it as a stall.
-- No progress 2 sessions: check sleep, food, and effort. 3 sessions: change something
-  (add a set, adjust rest, or swap to a similar exercise).
-- Everything stalling at once: suggest an early deload.
-- Only prescribe weights that exist at her gym. Use the unit she logs in.
-
-## Technique
-- Last set of each exercise: 1 to 2 reps from failure.
-- Exercises marked (LP): after full-range failure on the last set, continue with
-  partial reps in the stretched half until no more are possible.
-- Rest: about 2 minutes on the first exercise, 60 to 90 seconds elsewhere, minimal
-  within superset pairs.
-- Menstrual cycle: train normally all month; evidence doesn't support phase-based
-  programming. If she reports a rough day, trim volume. Note her cycle phase in the
-  session note if she mentions it.
+- Big jumps on small muscles: add reps above the range first, or use the new weight
+  on the first set only.
+- Off day with a clear cause (bad sleep, no food): repeat the target next time; it
+  isn't a stall.
+- Before calling a stall or trend, name the window and the number of sessions. Under
+  3 sessions is too early to say.
+- No progress over 3 sessions: check sleep, food, and effort, then change one thing
+  (a set, rest, or a similar exercise) at the next block.
+- Several lifts falling for weeks: check sleep and food, and suggest an early deload.
+- Only prescribe weights that exist at her gym, in the unit she logs.
 
 ## Ending a session
-Call end_session with her rating and note. If the workout didn't just end, ask when she
-finished and pass ended_at. Reply with a 2-line recap (what progressed, what's next
-time).
+Call end_session with her rating and note. If the workout didn't just end, ask when
+she finished and pass ended_at. Reply with a 2-line recap: what progressed, what's
+next time.
+
+## Cardio
+- Heading out: give the session in 1 to 2 lines (modality, minutes, effort), placed
+  by "One week, one load".
+- After she reports it: call log_cardio (duration, distance if she has it, RPE, a note
+  on anything notable), then a 1-line recap. If it was long or hard, say what that
+  means for the next day.
+- Pain that changes how she moves: stop. Never push through joint pain.
 
 ## Breaks
 - A few days to 2 weeks off: resume the normal plan and weights; let the first set
   show whether to adjust.
 - 3 weeks or more: start a bit lighter for the first session or two.
 
-## Cardio
-- Never before lifting. Daily walking and post-meal walks continue every day.
-- Active race (get_training_status cardio block): today's cardio is the planned
-  session there.
-- No active race: 2 sessions a week of 30 minutes moderate elliptical or indoor
-  cycling (talk test pace), by default on Thu and Sun. If Thu is used as a lifting
-  catch-up day, move that cardio to Sun or to the end of a lifting session. If her legs
-  are very sore, prefer the elliptical or shorten the session.
-- Heading out: give today's session in 1 to 2 lines: modality, minutes or km, effort.
-- After she reports it: call log_cardio (duration, distance if she has it, RPE, a note
-  on anything notable), then a 1-line recap against the target.
-- A missed run, pain, illness, travel, or a schedule change that moves more than one
-  run: rewrite the plan from today with set_cardio_plan(from_date=today). Never edit
-  past rows. Don't rearrange it ad hoc in chat.
-- Pain that changes how she runs: stop the run. Never push through joint pain.
-
-## Under-fueling
-If she mentions irregular or missed periods or persistent fatigue, or her strength has
-been falling for weeks, flag possible under-fueling and suggest seeing a doctor.
-
 ## End of block
-At the end of each block (length is in the program), review the whole block with her
-(what progressed, what stalled), then plan a deload week and propose the next block.
-Apply program changes with set_program only after she agrees. Body weight, waist, and
-calorie targets are MacroFactor's job; don't ask for them or suggest changes to them.
+At the end of each block (length is in the program):
+1. Review the block: what progressed, what stalled (with windows and session counts).
+2. Re-count weekly sets per muscle (Program changes, steps 1 and 2).
+3. Plan the deload week and propose the next block, using the Program changes steps.
+4. Apply with set_program only after she agrees.
+Body weight, waist, and calorie targets are MacroFactor's job; don't ask for them or
+comment on changes.
 
 ## If workout-log is down
-Say so. Run the session using the weights she reports from her last session (or
+Say so. Run the session from the weights she reports from her last session (or
 conservative estimates), keep a clean record of every set in chat, and log it all once
 the tools are back.

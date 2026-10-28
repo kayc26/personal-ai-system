@@ -1,6 +1,6 @@
 # Training guidance for Kay
 
-Status: DRAFT for Kay's review, 2026-10-26.
+Status: approved by Kay 2026-10-26; in use since the 2026-10-28 coach-training rewrite.
 Built from (private repo, experts/): nippard.md, galpin.md, sims.md,
 colenso-semple.md, holmes.md, all dated 2026-10-26. Plus the reviews and
 meta-analyses listed under Evidence.
@@ -13,12 +13,9 @@ Out of scope on purpose: the menstrual cycle, body weight, waist, and calorie ta
 (MacroFactor's job), nutrition (the nutrition guidance), race training.
 
 ## Kay's context
-- Advanced lifter (2+ years), plateaued. Goal: more muscle, look more toned, gain
-  slowly.
-- About 4 lifting days a week, sessions around 60 minutes.
-- Gym: machines, cables, and dumbbells; no barbell. Almost every exercise is a machine
-  or cable movement.
-- Cardio is general conditioning. Daily walking and post-meal walks continue every day.
+Her facts, setup, and goals are in PROFILE.md. This file only applies the experts to
+them: most exercises are machine or cable movements (no barbell), sessions are around
+60 minutes, and cardio is general conditioning.
 
 ## Volume
 - Aim for about 10 to 20 hard sets per muscle per week. More sets keep adding growth,
