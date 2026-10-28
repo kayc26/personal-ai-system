@@ -40,3 +40,4 @@ asking.
 ## Results
 | Date | Skill commit | Case 1 | Case 2 | Notes |
 |---|---|---|---|---|
+| 2026-10-28 | f25f2c2 (before) | Fail | Fail | 1: swapped in Upper B that afternoon and moved Lower B to the next day; offered a trimmed Lower B as the alternative. 2: gave the new totals (8 side delt, 8 to 9 triceps sets) but not the current ones, didn't half-count pressing for triceps; reasons and a 60-minute check were there, and it asked first, but it's mid-block and it proposed starting today. |
