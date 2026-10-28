@@ -1,23 +1,26 @@
 ---
 name: "check-nutrition"
-description: "Check food choices against a person's nutrition rules, using their nutrition profile plus built-in evidence-based modules (glucose management, strength training, active women). Use when the user asks whether a meal or recipe fits their goals, what to eat before or after a workout, how to make a dish healthier, or about supplements. Also used by other skills to shape food suggestions. Not for picking what to cook or where to eat."
+description: "Check food choices against a person's nutrition rules, using their profile plus built-in evidence-based modules (glucose management, strength training, active women). Use when the user asks whether a meal or recipe fits their goals, what to eat before or after a workout, how to make a dish healthier, or about supplements. Also used by other skills to shape food suggestions. Not for picking what to cook or where to eat."
 ---
 
 # Check Nutrition
 
 Turn a person's nutrition rules into practical food choices. This skill holds the
-method and the rules. The person's objective facts (sex, age, height, training
-experience, medical conditions, approved supplements) live in their nutrition
-profile, so the skill can be shared without carrying anyone's personal information.
+method and the rules. Everything about the person (facts, health and diet, training
+setup, goals, preferences, chosen experts) lives in their profile, so the skill can be
+shared without carrying anyone's personal information.
 
 Picking what to cook or where to eat belongs to other skills (suggest-what-to-cook,
 suggest-where-to-eat). They call this skill to judge their options.
 
 ## Step 1: Load the profile
 
-Look for a file named `NUTRITION_PROFILE.md` in the project files (`/mnt/project/`).
+Look for a file named `PROFILE.md` in the project files (`/mnt/project/`), or
+`NUTRITION_PROFILE.md` if that's the only one.
 
-- **Found:** read it. It holds facts only, no rules. Pick the modules from the facts:
+- **Found:** read it. It holds facts, setup, goals, preferences, and experts, no
+  rules. Respect its allergies, intolerances, dietary pattern, and dislikes in every
+  suggestion. Pick the modules from its facts:
   - prediabetes, insulin resistance, or a stated wish for steadier blood sugar:
     Glucose management
   - lifts regularly or wants to build muscle: Strength training
@@ -25,7 +28,8 @@ Look for a file named `NUTRITION_PROFILE.md` in the project files (`/mnt/project
 - **Not found:** say in one line that no profile is available here. Apply only what
   they state in the message, or offer to build a profile with a few quick questions:
   sex, age, height, training experience, health conditions and what a doctor handles,
-  approved supplements, food intolerances. Never guess at health conditions.
+  allergies and intolerances, dietary pattern, approved supplements, goals, food
+  preferences. Never guess at health conditions.
 
 ## Step 2: Get today's context
 
@@ -61,8 +65,9 @@ give practical changes, not lectures:
 - **Respect what they want to eat.** If they want to try a new or indulgent recipe,
   help it fit (pairing, timing, a post-meal walk) rather than steering them away. Most
   meals matter more than any single one.
-- **Explain briefly when useful.** Don't comment on body weight, waist, or
-  appearance; those are tracked in MacroFactor.
+- **Explain briefly when useful.** The profile's weight is a dated reference for
+  sizing advice (e.g. protein per kg). Never ask for weight or comment on weight,
+  waist, or appearance changes; those are tracked in MacroFactor.
 
 ## Modules
 
