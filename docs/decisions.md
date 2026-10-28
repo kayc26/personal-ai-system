@@ -182,6 +182,14 @@ Design decisions for the system, newest last. Each entry names what triggered it
 - Reviewing the second failure changed my mind about it: putting triceps on the pull day wasn't wrong, since my push muscles only get one session a week. What was wrong was deciding without counting sets, frequency, or time. The test checks the reasoning, not the answer.
 - Before calling a stall or trend, the coach names the time window and the number of sessions; under three is too early to say.
 
+## Project files trimmed to facts
+
+**Trigger:** the project's two context files overlapped with the skills, contradicted each other, and had gone stale.
+
+- The nutrition profile holds only what a personal trainer would know: sex, age, height, training experience, medical facts, supplements. No rules, routine, or style; those live in the skills. Weight isn't stored, since it changes and MacroFactor tracks it.
+- The profile's source of truth moved to the private repo; the project copy is an upload.
+- A separate meal-planning file described a different weekly plan than the cooking skill and no skill read it. It was deleted; the skill's "this week" list is the one model.
+
 ## Parked
 
 Built only when triggered: staleness tracking for inventory, gym equipment as data, fuzzy dish matching, a nearby filter for places, run sync from Strava or Apple Health, scheduled list syncs, a products record for packaged food, a rating field for snacks, stall detection in code, fixing mislocated imported places (they correct themselves when looked up).
