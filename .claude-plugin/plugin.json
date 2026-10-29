@@ -1,0 +1,7 @@
+{
+  "name": "personal-ai-system",
+  "version": "0.1.0",
+  "description": "Kay's personal AI system: training, kitchen inventory, recipes, and food log. Nine skills plus the three MCP servers they run on.",
+  "author": { "name": "Kay Chen" },
+  "repository": "https://github.com/kayc26/personal-ai-system"
+}
