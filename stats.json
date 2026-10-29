@@ -1,32 +1,32 @@
 {
-  "as_of": "2026-10-28",
+  "as_of": "2026-10-29",
   "restaurants": 1493,
   "recipes": 245,
-  "kitchen_items": 97,
-  "workouts": 22,
-  "sets": 379,
+  "kitchen_items": 95,
+  "workouts": 23,
+  "sets": 392,
   "tools": 62,
   "servers": {
     "kitchen-inventory": {
       "server": "kitchen-inventory",
-      "as_of": "2026-10-28",
+      "as_of": "2026-10-29",
       "tools": 8,
       "totals": {
-        "items_tracked": 97,
+        "items_tracked": 95,
         "locations": 4,
-        "expired_now": 6
+        "expired_now": 5
       },
       "monthly": []
     },
     "workout-log": {
       "server": "workout-log",
-      "as_of": "2026-10-28",
+      "as_of": "2026-10-29",
       "tools": 19,
       "totals": {
-        "sessions_completed": 22,
-        "sets_logged": 379,
-        "cardio_sessions": 10,
-        "cardio_km": 40.7,
+        "sessions_completed": 23,
+        "sets_logged": 392,
+        "cardio_sessions": 11,
+        "cardio_km": 45.5,
         "undated_sessions_completed": 0,
         "undated_sets_logged": 0,
         "undated_cardio_sessions": 0,
@@ -42,16 +42,16 @@
         },
         {
           "month": "2026-10",
-          "sessions_completed": 16,
-          "sets_logged": 283,
-          "cardio_sessions": 7,
-          "cardio_km": 32.6
+          "sessions_completed": 17,
+          "sets_logged": 296,
+          "cardio_sessions": 8,
+          "cardio_km": 37.5
         }
       ]
     },
     "food-journal": {
       "server": "food-journal",
-      "as_of": "2026-10-28",
+      "as_of": "2026-10-29",
       "tools": 35,
       "totals": {
         "places": 1493,
