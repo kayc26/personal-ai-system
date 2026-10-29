@@ -1,0 +1,12 @@
+{
+  "name": "kay",
+  "description": "Kay's personal plugin catalog",
+  "owner": { "name": "Kay Chen" },
+  "plugins": [
+    {
+      "name": "personal-ai-system",
+      "source": "./",
+      "description": "Training, kitchen inventory, recipes, and food log: nine skills plus three MCP servers"
+    }
+  ]
+}

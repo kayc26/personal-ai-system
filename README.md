@@ -61,6 +61,26 @@ Full log: [docs/decisions.md](docs/decisions.md)
 
 `skills/` is the source of truth. Claude.ai holds a copy uploaded by hand, so the two can drift. To check, run `python3 scripts/check_skills.py --package` in a Claude session with this repo cloned. It lists any skill that's out of date or not loaded and zips each one into `dist/` for upload. It also fails if shared reference files (marked "Identical copy") differ between skills, and flags any skill in `skills/RETIRED.txt` that's still loaded, so it can be deleted in claude.ai.
 
+## Install as a Claude Code plugin
+
+This repo is also a Claude Code plugin: the nine skills plus the three MCP servers, installed as one thing. `skills/` stays the single source of truth; the plugin is another way to deploy it, next to the claude.ai upload.
+
+The server URLs aren't in the repo. Set them first:
+
+```
+export KITCHEN_INVENTORY_MCP_URL=https://<kitchen-inventory>/mcp
+export FOOD_JOURNAL_MCP_URL=https://<food-journal>/mcp
+export WORKOUT_LOG_MCP_URL=https://<workout-log>/mcp
+```
+
+Then install:
+
+```
+/plugin install personal-ai-system --marketplace kayc26/personal-ai-system
+```
+
+Or load it for one session from a clone with `claude --plugin-dir .`. Skills show up as `/personal-ai-system:<skill>`.
+
 ## Status
 
 **Live:** kitchen inventory, recipe saving, the "this week" list, cooking suggestions, lifting sessions, the food journal, restaurant suggestions.
