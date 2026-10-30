@@ -1,26 +1,26 @@
 {
-  "as_of": "2026-10-29",
+  "as_of": "2026-10-30",
   "restaurants": 1493,
-  "recipes": 245,
-  "kitchen_items": 95,
+  "recipes": 246,
+  "kitchen_items": 92,
   "workouts": 23,
   "sets": 392,
   "tools": 62,
   "servers": {
     "kitchen-inventory": {
       "server": "kitchen-inventory",
-      "as_of": "2026-10-29",
+      "as_of": "2026-10-30",
       "tools": 8,
       "totals": {
-        "items_tracked": 95,
+        "items_tracked": 92,
         "locations": 4,
-        "expired_now": 5
+        "expired_now": 0
       },
       "monthly": []
     },
     "workout-log": {
       "server": "workout-log",
-      "as_of": "2026-10-29",
+      "as_of": "2026-10-30",
       "tools": 19,
       "totals": {
         "sessions_completed": 23,
@@ -51,7 +51,7 @@
     },
     "food-journal": {
       "server": "food-journal",
-      "as_of": "2026-10-29",
+      "as_of": "2026-10-30",
       "tools": 35,
       "totals": {
         "places": 1493,
@@ -62,14 +62,14 @@
           "not_saved": 89
         },
         "places_imported": 1481,
-        "recipes": 245,
+        "recipes": 246,
         "recipes_by_status": {
-          "saved": 234,
+          "saved": 235,
           "cook_again": 5,
           "cooked": 3,
           "dropped": 3
         },
-        "recipes_full_text": 24,
+        "recipes_full_text": 26,
         "recipes_imported": 214,
         "home_cooks": 8,
         "visits": 9,
@@ -91,7 +91,7 @@
           "month": "2026-10",
           "home_cooks": 4,
           "visits": 4,
-          "recipes_saved": 18,
+          "recipes_saved": 19,
           "places_added": 3
         }
       ]
