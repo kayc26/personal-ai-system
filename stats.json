@@ -1,18 +1,18 @@
 {
-  "as_of": "2026-11-01",
+  "as_of": "2026-11-02",
   "restaurants": 1493,
-  "recipes": 251,
-  "kitchen_items": 102,
+  "recipes": 252,
+  "kitchen_items": 105,
   "workouts": 25,
   "sets": 422,
   "tools": 62,
   "servers": {
     "kitchen-inventory": {
       "server": "kitchen-inventory",
-      "as_of": "2026-11-01",
+      "as_of": "2026-11-02",
       "tools": 8,
       "totals": {
-        "items_tracked": 102,
+        "items_tracked": 105,
         "locations": 4,
         "expired_now": 0
       },
@@ -20,13 +20,13 @@
     },
     "workout-log": {
       "server": "workout-log",
-      "as_of": "2026-11-01",
+      "as_of": "2026-11-02",
       "tools": 19,
       "totals": {
         "sessions_completed": 25,
         "sets_logged": 422,
-        "cardio_sessions": 11,
-        "cardio_km": 45.5,
+        "cardio_sessions": 12,
+        "cardio_km": 54.3,
         "undated_sessions_completed": 0,
         "undated_sets_logged": 0,
         "undated_cardio_sessions": 0,
@@ -51,14 +51,14 @@
           "month": "2026-11",
           "sessions_completed": 0,
           "sets_logged": 0,
-          "cardio_sessions": 0,
-          "cardio_km": 0.0
+          "cardio_sessions": 1,
+          "cardio_km": 8.8
         }
       ]
     },
     "food-journal": {
       "server": "food-journal",
-      "as_of": "2026-11-01",
+      "as_of": "2026-11-02",
       "tools": 35,
       "totals": {
         "places": 1493,
@@ -69,9 +69,9 @@
           "not_saved": 89
         },
         "places_imported": 1481,
-        "recipes": 251,
+        "recipes": 252,
         "recipes_by_status": {
-          "saved": 240,
+          "saved": 241,
           "cook_again": 5,
           "cooked": 3,
           "dropped": 3
@@ -105,7 +105,7 @@
           "month": "2026-11",
           "home_cooks": 0,
           "visits": 0,
-          "recipes_saved": 0,
+          "recipes_saved": 1,
           "places_added": 0
         }
       ]
