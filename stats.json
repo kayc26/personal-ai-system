@@ -1,32 +1,32 @@
 {
-  "as_of": "2026-11-08",
+  "as_of": "2026-11-09",
   "restaurants": 1493,
-  "recipes": 252,
-  "kitchen_items": 107,
-  "workouts": 29,
-  "sets": 495,
+  "recipes": 254,
+  "kitchen_items": 104,
+  "workouts": 30,
+  "sets": 512,
   "tools": 62,
   "servers": {
     "kitchen-inventory": {
       "server": "kitchen-inventory",
-      "as_of": "2026-11-08",
+      "as_of": "2026-11-09",
       "tools": 8,
       "totals": {
-        "items_tracked": 107,
+        "items_tracked": 104,
         "locations": 4,
-        "expired_now": 3
+        "expired_now": 0
       },
       "monthly": []
     },
     "workout-log": {
       "server": "workout-log",
-      "as_of": "2026-11-08",
+      "as_of": "2026-11-09",
       "tools": 19,
       "totals": {
-        "sessions_completed": 29,
-        "sets_logged": 495,
-        "cardio_sessions": 14,
-        "cardio_km": 63.9,
+        "sessions_completed": 30,
+        "sets_logged": 512,
+        "cardio_sessions": 15,
+        "cardio_km": 73.1,
         "undated_sessions_completed": 0,
         "undated_sets_logged": 0,
         "undated_cardio_sessions": 0,
@@ -49,16 +49,16 @@
         },
         {
           "month": "2026-11",
-          "sessions_completed": 4,
-          "sets_logged": 73,
-          "cardio_sessions": 3,
-          "cardio_km": 18.3
+          "sessions_completed": 5,
+          "sets_logged": 90,
+          "cardio_sessions": 4,
+          "cardio_km": 27.6
         }
       ]
     },
     "food-journal": {
       "server": "food-journal",
-      "as_of": "2026-11-08",
+      "as_of": "2026-11-09",
       "tools": 35,
       "totals": {
         "places": 1493,
@@ -69,16 +69,16 @@
           "not_saved": 89
         },
         "places_imported": 1481,
-        "recipes": 252,
+        "recipes": 254,
         "recipes_by_status": {
           "saved": 241,
-          "cook_again": 5,
+          "cook_again": 7,
           "cooked": 3,
           "dropped": 3
         },
-        "recipes_full_text": 26,
+        "recipes_full_text": 29,
         "recipes_imported": 214,
-        "home_cooks": 8,
+        "home_cooks": 10,
         "visits": 10,
         "dishes_out": 20,
         "undated_home_cooks": 0,
@@ -103,9 +103,9 @@
         },
         {
           "month": "2026-11",
-          "home_cooks": 0,
+          "home_cooks": 2,
           "visits": 0,
-          "recipes_saved": 1,
+          "recipes_saved": 3,
           "places_added": 0
         }
       ]
