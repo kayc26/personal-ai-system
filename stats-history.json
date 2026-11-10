@@ -1849,5 +1849,57 @@
         "undated_places_added": 0
       }
     }
+  },
+  {
+    "date": "2026-11-10",
+    "restaurants": 1493,
+    "recipes": 254,
+    "kitchen_items": 106,
+    "workouts": 30,
+    "sets": 512,
+    "tools": 62,
+    "totals": {
+      "kitchen-inventory": {
+        "items_tracked": 106,
+        "locations": 4,
+        "expired_now": 1
+      },
+      "workout-log": {
+        "sessions_completed": 30,
+        "sets_logged": 512,
+        "cardio_sessions": 15,
+        "cardio_km": 73.1,
+        "undated_sessions_completed": 0,
+        "undated_sets_logged": 0,
+        "undated_cardio_sessions": 0,
+        "undated_cardio_km": 0.0
+      },
+      "food-journal": {
+        "places": 1493,
+        "places_by_status": {
+          "want_to_go": 1224,
+          "been": 170,
+          "visited": 10,
+          "not_saved": 89
+        },
+        "places_imported": 1481,
+        "recipes": 254,
+        "recipes_by_status": {
+          "saved": 241,
+          "cook_again": 7,
+          "cooked": 3,
+          "dropped": 3
+        },
+        "recipes_full_text": 29,
+        "recipes_imported": 214,
+        "home_cooks": 10,
+        "visits": 10,
+        "dishes_out": 20,
+        "undated_home_cooks": 0,
+        "undated_visits": 0,
+        "undated_recipes_saved": 0,
+        "undated_places_added": 0
+      }
+    }
   }
 ]
