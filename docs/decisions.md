@@ -203,6 +203,17 @@ Design decisions for the system, newest last. Each entry names what triggered it
 - Planned, not built: a skill that rebuilds guidance from the experts I pick and asks me to settle conflicts. It comes with the nutrition guidance, its first real use.
 - The rewrite fixes the two failures directly: long or hard cardio counts as the day's training, and every program change counts current sets (helper sets at half), checks time, and waits for the next block.
 
+## Remove friction, not fun
+
+**Trigger:** I use the workout log every day, but even with all the recipe and restaurant tools, I still browse recipes and scroll Google Maps on my own. Looking at why, the difference wasn't usage. It was what each tool takes away.
+
+- Some tasks are valuable for their outcome, some for the process. In training, deciding sets, weights, and progression is overhead between me and the workout, so a tool that decides for me is a relief. With food, exploring and deciding is part of the enjoyment: browsing is the consumption, not a chore before it.
+- Time spent on a task isn't a sign the user wants less of it. Before automating something, ask whether the user wants to do it less, or just wants it to be easier.
+- For food, the system doesn't compete with exploration. It owns the edges around it: effortless capture (a link, post, or screenshot goes straight into saved places or recipes), the tedious tail (inventory, shopping list, logging), and memory of what I found and how it went.
+- The same person wants both modes. Exploring on a weekend is fun; deciding what to cook on a tired weeknight isn't. The picker is fast and decisive only when I ask for a pick, and stays out of the way otherwise.
+- Caveat: low usage can also mean the tool is worse at the job. Google Maps and RedNote win on photos, reviews, and serendipity. The check: if the tool had a great browsing surface, would I use it? If yes, it's an execution gap; if no, it's the wrong job.
+- Not built: a browsing surface to rival Maps or RedNote, or recommendations pushed unasked.
+
 ## Parked
 
 Built only when triggered: staleness tracking for inventory, gym equipment as data, fuzzy dish matching, a nearby filter for places, run sync from Strava or Apple Health, scheduled list syncs, a products record for packaged food, a rating field for snacks, stall detection in code, fixing mislocated imported places (they correct themselves when looked up), user-agnostic skills, a guidance-building skill, multi-user servers.
