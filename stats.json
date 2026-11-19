@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-18",
+  "as_of": "2026-11-19",
   "restaurants": 1493,
   "recipes": 254,
   "kitchen_items": 117,
@@ -9,18 +9,18 @@
   "servers": {
     "kitchen-inventory": {
       "server": "kitchen-inventory",
-      "as_of": "2026-11-18",
+      "as_of": "2026-11-19",
       "tools": 8,
       "totals": {
         "items_tracked": 117,
         "locations": 4,
-        "expired_now": 3
+        "expired_now": 8
       },
       "monthly": []
     },
     "workout-log": {
       "server": "workout-log",
-      "as_of": "2026-11-18",
+      "as_of": "2026-11-19",
       "tools": 19,
       "totals": {
         "sessions_completed": 35,
@@ -58,7 +58,7 @@
     },
     "food-journal": {
       "server": "food-journal",
-      "as_of": "2026-11-18",
+      "as_of": "2026-11-19",
       "tools": 35,
       "totals": {
         "places": 1493,
