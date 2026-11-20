@@ -130,7 +130,7 @@ sunset those
 ---
 
 ### QST-HOME-COOK-DISHES: What happens to home cooks' dish-catalog links?
-- Status: unanswered
+- Status: answered
 - Why asking: each home cook links to a dish in the catalog, which stays in food-journal. The catalog is what lets "have I cooked this or had it out?" (`get_dish_history`) and restaurant dish search work across home and out.
 - Need: pick a letter (or override — any shape answers)
 
@@ -143,13 +143,13 @@ Options:
 **A — Keep the dish name as text.** Rationale: decision 3 rules out servers depending on each other, B duplicates a fact (layer rule), and most home cooks that matter link to a saved recipe, which moves with them.
 Confidence: 0.65, because I haven't measured how often Kay uses dish history across home and out. If wrong: if that cross history is something Kay uses weekly, B, with the catalog owned by kitchen.
 
-**ANS:** (by Kay)
-[Fill this in]
+**ANS:** (by kayc26)
+b
 
 ---
 
 ### QST-MARKETPLACE: Where do people install the plugins from?
-- Status: unanswered
+- Status: answered
 - Why asking: today the `kay` marketplace in this repo lists one plugin. With three plugins in three repos and this repo frozen, roommates need one short install step.
 - Need: pick a letter (or override — any shape answers)
 
@@ -162,8 +162,8 @@ Options:
 **A — Each area repo is its own marketplace.** Rationale: roommates only want kitchen, and A gives them one repo name; it matches the `packaged` course pattern (`extras/marketplace/`) and leaves nothing live in the frozen hub.
 Confidence: 0.6, because I haven't checked how plugins installed this way show up in the Claude app versus Claude Code. If wrong: if Kay wants one place to install all three, C.
 
-**ANS:** (by Kay)
-[Fill this in]
+**ANS:** (by kayc26)
+a
 
 ---
 
