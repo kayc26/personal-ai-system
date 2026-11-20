@@ -1,32 +1,32 @@
 {
-  "as_of": "2026-11-20",
-  "restaurants": 1493,
-  "recipes": 254,
-  "kitchen_items": 124,
-  "workouts": 35,
-  "sets": 597,
-  "tools": 62,
+  "as_of": "2026-10-17",
+  "restaurants": 1492,
+  "recipes": 242,
+  "kitchen_items": 99,
+  "workouts": 16,
+  "sets": 273,
+  "tools": 53,
   "servers": {
     "kitchen-inventory": {
       "server": "kitchen-inventory",
-      "as_of": "2026-11-20",
+      "as_of": "2026-10-17",
       "tools": 8,
       "totals": {
-        "items_tracked": 124,
+        "items_tracked": 99,
         "locations": 4,
-        "expired_now": 14
+        "expired_now": 7
       },
       "monthly": []
     },
     "workout-log": {
       "server": "workout-log",
-      "as_of": "2026-11-20",
+      "as_of": "2026-10-17",
       "tools": 19,
       "totals": {
-        "sessions_completed": 35,
-        "sets_logged": 597,
-        "cardio_sessions": 17,
-        "cardio_km": 87.3,
+        "sessions_completed": 16,
+        "sets_logged": 273,
+        "cardio_sessions": 7,
+        "cardio_km": 20.5,
         "undated_sessions_completed": 0,
         "undated_sets_logged": 0,
         "undated_cardio_sessions": 0,
@@ -42,45 +42,37 @@
         },
         {
           "month": "2026-10",
-          "sessions_completed": 19,
-          "sets_logged": 326,
-          "cardio_sessions": 8,
-          "cardio_km": 37.5
-        },
-        {
-          "month": "2026-11",
           "sessions_completed": 10,
-          "sets_logged": 175,
-          "cardio_sessions": 6,
-          "cardio_km": 41.8
+          "sets_logged": 177,
+          "cardio_sessions": 4,
+          "cardio_km": 12.4
         }
       ]
     },
     "food-journal": {
       "server": "food-journal",
-      "as_of": "2026-11-20",
-      "tools": 35,
+      "as_of": "2026-10-17",
+      "tools": 26,
       "totals": {
-        "places": 1493,
+        "places": 1492,
         "places_by_status": {
-          "want_to_go": 1224,
-          "been": 170,
-          "visited": 10,
-          "not_saved": 89
+          "want_to_go": 1313,
+          "been": 171,
+          "visited": 8
         },
         "places_imported": 1481,
-        "recipes": 254,
+        "recipes": 242,
         "recipes_by_status": {
-          "saved": 241,
-          "cook_again": 7,
+          "saved": 231,
+          "cook_again": 5,
           "cooked": 3,
           "dropped": 3
         },
-        "recipes_full_text": 29,
+        "recipes_full_text": 21,
         "recipes_imported": 214,
-        "home_cooks": 10,
-        "visits": 10,
-        "dishes_out": 20,
+        "home_cooks": 7,
+        "visits": 8,
+        "dishes_out": 17,
         "undated_home_cooks": 0,
         "undated_visits": 0,
         "undated_recipes_saved": 0,
@@ -96,17 +88,10 @@
         },
         {
           "month": "2026-10",
-          "home_cooks": 4,
-          "visits": 5,
-          "recipes_saved": 24,
-          "places_added": 3
-        },
-        {
-          "month": "2026-11",
-          "home_cooks": 2,
-          "visits": 0,
-          "recipes_saved": 3,
-          "places_added": 0
+          "home_cooks": 3,
+          "visits": 3,
+          "recipes_saved": 15,
+          "places_added": 2
         }
       ]
     }

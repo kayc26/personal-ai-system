@@ -84,8 +84,7 @@ after she says yes.
 
 ## After
 
-When she eats there, log-dining-out takes over and logs the meal, the visit, and the
-dishes.
+When she eats there, log-food takes over and logs the visit and dishes.
 
 ## Style
 
