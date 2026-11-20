@@ -1,12 +1,12 @@
 # ADR-0002: OAuth through Neon Auth on all three servers
 
 - **Date**: 2026-11-20
-- **Iteration**: 1
+- **Iteration**: 2
 - **Status**: Draft
 - **Deciders**: Kay (decides), Ari (Claude Opus 5.5, recommends)
 - **Source**: [seed-2026-11-20-separating-the-system](seed-2026-11-20-separating-the-system.md)
 
-**TL;DR**: Every server requires a signed-in user through OAuth, with Neon Auth as the issuer. Each server has its own issuer. Kitchen accepts its household's accounts, and workout and food-journal accept only Kay's. Works from the Claude app, the phone, and Claude Code.
+**TL;DR**: Every server requires a signed-in user through OAuth, with Neon Auth as the issuer and Google sign-in. Each server has its own issuer and serves its own login and consent pages. Each server allowlists its users (the household for kitchen, Kay for the others). Works from the Claude app, the phone, and Claude Code.
 
 ---
 
@@ -18,9 +18,10 @@
   - Claude app, web, and mobile connectors authenticate with OAuth. They accept Client ID Metadata Documents (`oauth_cimd`); static headers are an org-wide shared beta, not per user. Source: claude.com/docs/connectors/building/authentication.
   - Claude Code supports a per-user token through plugin `userConfig`, but only in Claude Code, so it can't cover the phone.
   - Neon's Managed Better Auth has an OAuth provider plugin made for MCP servers, with CIMD on by default. Each branch has one issuer and one `mcp.resource`, and CIMD works only for that resource. You host the login and consent pages yourself; none are provided. Source: neon.com/docs/auth/guides/plugins/oauth-provider (updated 2026-11-06).
-- **An earlier attempt failed.** Kay started one in Neon project `personal-ai-auth` (2026-10-15), and it didn't work out.
+- **An earlier attempt failed.** Kay started one in Neon project `personal-ai-auth` (2026-10-15), and it didn't work out. What stopped it is unknown (QST-PRIOR-ATTEMPT: B).
+- **Today's plugin** (`.mcp.json` in this repo) sends only URLs from env vars, no credentials.
 
-## Decision (agreed in the seed)
+## Decision
 
 1. **One auth path for every surface: OAuth via Neon Auth.** No separate token setup.
 2. **One issuer per server**, each in that server's own Neon project ([ADR-0001](0001-split-the-system-by-area.md)).
@@ -28,10 +29,15 @@
 4. **Kay-only servers check the user.** workout-log and food-journal accept only Kay's account. Reads and writes are separate checks, so food-journal can open reads to the public later.
 5. **Rollout is one server at a time.** Kitchen goes first. Turning auth on breaks the existing connector until Kay re-adds it and signs in, so each switch is a planned step.
 6. **food-journal's upload endpoint keeps `IMPORT_TOKEN`.** It isn't an MCP route.
+7. **Each server serves its own `/login` and `/consent` pages** on its Render URL, added as a trusted domain on its issuer (QST-PAGES-HOST: A).
+8. **Sign in with Google** through Neon Auth (QST-SIGNIN-METHOD: B; Kay notes Neon offers it).
+9. **Two locks on who may use a server** (QST-WHO-MAY-SIGN-UP: C): an allowlist of user ids per server in an env var, checked in code and covered by tests (the guarantee), and sign-ups closed in Neon once the allowed people have registered, if Neon supports it (reduces junk accounts).
 
 ### Step 0, before the first build prompt
+Because the earlier attempt's failure is unknown (QST-PRIOR-ATTEMPT: B), step 0 is the test, and a failure stops the work and comes back here.
 - Confirm that the Python `mcp` SDK can serve protected-resource metadata and plug in a token verifier. Kitchen pins `mcp[cli]>=1.2,<2`, and the version may need raising. If it can't, use a small middleware that does the 401 and the verification.
-- Prove one server end to end before building pages for all three: sign in from the Claude app on the phone, call one tool, and see the user id.
+- Confirm how Google sign-in is set up in Neon Auth (shared development credentials or Kay's own Google OAuth client) and whether sign-ups can be closed.
+- Prove one server end to end before building pages for all three: sign in with Google from the Claude app on the phone, call one tool, and see the user id.
 
 ---
 
@@ -111,3 +117,17 @@ Confidence: 0.8, because A is simple and fully under our control. If wrong: if N
 c
 
 ---
+
+## Iterations
+
+### Iteration 1 — 2026-11-20
+- **Trigger**: seed chunked into ADRs.
+- **Contributors**: Kay, Ari (Claude Opus 5.5).
+- **Changes**: first draft; four questions.
+- **Outcome**: Draft. Kay answered all four (PRIOR-ATTEMPT B, PAGES-HOST A, SIGNIN-METHOD B, WHO-MAY-SIGN-UP C).
+
+### Iteration 2 — 2026-11-20
+- **Trigger**: Kay's answers.
+- **Contributors**: Kay, Ari (Claude Opus 5.5).
+- **Changes**: Decision gains 7–9 (pages per server, Google sign-in, allowlist plus closed sign-ups). Step 0 now treats the unknown earlier failure as the test and checks Google sign-in setup. Context notes today's plugin `.mcp.json`.
+- **Outcome**: Draft. No open questions remain in this ADR; the next step is step 0 on kitchen.
