@@ -148,7 +148,8 @@ Re-queuing a recipe keeps its original date. Queuing doesn't change its status: 
 
 ## After
 
-When she says she cooked it, log-food takes over: it logs the meal, links the saved
+When she says she cooked it, log-home-cooking takes over: it logs the dish and the
+meal, links the saved
 recipe (which takes it off the "this week" list), asks whether she'd make it again,
 and offers to deduct the ingredients from the inventory. If she wants to save a new
 recipe along the way, clip-recipe saves it.

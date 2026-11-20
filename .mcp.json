@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "kitchen-inventory": { "type": "http", "url": "${KITCHEN_INVENTORY_MCP_URL}" },
+    "food-journal": { "type": "http", "url": "${FOOD_JOURNAL_MCP_URL}" },
+    "workout-log": { "type": "http", "url": "${WORKOUT_LOG_MCP_URL}" }
+  }
+}

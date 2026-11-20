@@ -17,6 +17,7 @@ A personal agent built on Claude that runs my training, kitchen inventory, recip
 - **Recipes:** I save a recipe from a link, screenshots, a cookbook photo, or a cooking video. It stores the full recipe, plus nutrition and cook time when the source lists them. Recipes I want to make go on a "this week" list.
 - **What to cook:** it picks from the "this week" list based on what's expiring, what I cooked recently, today's training, and my remaining macros, then gives me a recipe I can follow.
 - **Training:** when I get to the gym, it picks the day's session, prescribes the weight for each exercise from my history, and logs every set as I go.
+- **Meals:** every time I eat, it asks how hungry and how full I am before and after, and how satisfying the meal was. It's a mindful-eating habit, and later I can compare satisfaction with macros. Restaurant meals, home cooking, and snacks each have their own skill, chosen by who prepared the food.
 - **Eating out:** it keeps a journal of what I've cooked and eaten. When I need a restaurant, it picks from my saved places for the occasion and skips places I didn't like.
 
 ## How it's built
@@ -25,8 +26,8 @@ A personal agent built on Claude that runs my training, kitchen inventory, recip
 |---|---|---|
 | Interfaces | Claude app (phone, desktop, Chrome side panel); an iOS Shortcut that pastes remaining macros from MacroFactor | Where I talk to it |
 | Project | One instructions file | Role, coaching rules, routing to skills |
-| Skills (6) | manage-kitchen-inventory, suggest-what-to-cook, clip-recipe, log-food, suggest-where-to-eat, check-nutrition | Reusable procedures |
-| MCP servers (3, on Render) | kitchen-inventory (8 tools), workout-log (19 tools), food-journal (26 tools) | Facts and deterministic logic |
+| Skills (9) | coach-training, manage-kitchen-inventory, suggest-what-to-cook, clip-recipe, log-dining-out, log-home-cooking, log-ready-to-eat, suggest-where-to-eat, check-nutrition | Reusable procedures |
+| MCP servers (3, on Render) | kitchen-inventory (8 tools), workout-log (19 tools), food-journal (30 tools) | Facts and deterministic logic |
 
 ## Design principle
 
@@ -55,6 +56,30 @@ Full log: [docs/decisions.md](docs/decisions.md)
 - I only build when something breaks or becomes a weekly pain.
 - Each change is a scoped prompt to a coding agent, with an explicit "do not build" list so it doesn't add features I didn't ask for. See [docs/coding-agent-prompts.md](docs/coding-agent-prompts.md).
 - Every decision and its trade-offs go in the decision log.
+
+## Keeping skills in sync
+
+`skills/` is the source of truth. Claude.ai holds a copy uploaded by hand, so the two can drift. To check, run `python3 scripts/check_skills.py --package` in a Claude session with this repo cloned. It lists any skill that's out of date or not loaded and zips each one into `dist/` for upload. It also fails if shared reference files (marked "Identical copy") differ between skills, and flags any skill in `skills/RETIRED.txt` that's still loaded, so it can be deleted in claude.ai.
+
+## Install as a Claude Code plugin
+
+This repo is also a Claude Code plugin: the nine skills plus the three MCP servers, installed as one thing. `skills/` stays the single source of truth; the plugin is another way to deploy it, next to the claude.ai upload.
+
+The server URLs aren't in the repo. Set them first:
+
+```
+export KITCHEN_INVENTORY_MCP_URL=https://<kitchen-inventory>/mcp
+export FOOD_JOURNAL_MCP_URL=https://<food-journal>/mcp
+export WORKOUT_LOG_MCP_URL=https://<workout-log>/mcp
+```
+
+Then install:
+
+```
+/plugin install personal-ai-system --marketplace kayc26/personal-ai-system
+```
+
+Or load it for one session from a clone with `claude --plugin-dir .`. Skills show up as `/personal-ai-system:<skill>`.
 
 ## Status
 
