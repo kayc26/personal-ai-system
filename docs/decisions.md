@@ -214,6 +214,16 @@ Design decisions for the system, newest last. Each entry names what triggered it
 - Caveat: low usage can also mean the tool is worse at the job. Google Maps and RedNote win on photos, reviews, and serendipity. The check: if the tool had a great browsing surface, would I use it? If yes, it's an execution gap; if no, it's the wrong job.
 - Not built: a browsing surface to rival Maps or RedNote, or recommendations pushed unasked.
 
+## Meals and check-ins retired
+
+**Trigger:** I don't want the meal check-ins any more (decided while splitting the system by area, ADR-0001).
+
+- Meals with hunger, fullness, and satisfaction check-ins are retired. This reverses "Meals and mindful-eating check-ins".
+- log-ready-to-eat is retired: its only record was the meal. Eating something from the kitchen ("I ate the last yogurt") is an inventory update, handled by manage-kitchen-inventory.
+- log-home-cooking and log-dining-out keep only the home cook and the visit.
+- The meal tools (start_meal, end_meal, get_open_meal, update_meal) come out of food-journal. Meal data is kept, as with earlier tool removals.
+- Not built: anything to replace the check-ins.
+
 ## Parked
 
 Built only when triggered: staleness tracking for inventory, gym equipment as data, fuzzy dish matching, a nearby filter for places, run sync from Strava or Apple Health, scheduled list syncs, a products record for packaged food, a rating field for snacks, stall detection in code, fixing mislocated imported places (they correct themselves when looked up), user-agnostic skills, a guidance-building skill, multi-user servers.

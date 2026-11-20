@@ -1,12 +1,12 @@
 # ADR-0003: Kitchen multi-user data model
 
 - **Date**: 2026-11-20
-- **Iteration**: 2
+- **Iteration**: 3
 - **Status**: Draft
 - **Deciders**: Kay (decides), Ari (Claude Opus 5.5, recommends)
 - **Source**: [seed-2026-11-20-separating-the-system](seed-2026-11-20-separating-the-system.md)
 
-**TL;DR**: One kitchen server serves one household. The inventory is shared by everyone signed in. Recipes, the "this week" list, and home cooks belong to each person; roommates can read each other's recipes but only change their own. Each person's profile lives on the server. Kay's existing rows become hers.
+**TL;DR**: One kitchen server serves one household. The inventory is shared by everyone signed in. Recipes, the "this week" list, and home cooks belong to each person; roommates can read each other's recipes but only change their own. Each person's profile lives on the server, Kay's included. Kay's existing rows become hers.
 
 ---
 
@@ -27,7 +27,7 @@ From the current repo (iteration 1 missed these): the decision "One profile per 
 4. **Roommates can read each other's recipes** (QST-RECIPE-VISIBILITY: B). By default each person sees their own; asking for a roommate's ("what's on Mia's list?") is a read. Only the owner can change, queue, or delete a recipe.
 5. **Cooking is one record: the home cook** (QST-HOME-COOKS in ADR-0001: C). Marking a recipe cooked creates a home cook (at minimum: recipe and date); log-home-cooking adds rating and notes when the person wants them. "Cooked recently" and the recipe's status both come from home cooks, so there's one source. This replaces iteration 1's separate cooked marker.
 6. **Kay's data migrates to Kay.** Kay's recipes and home cooks copied from `kayfoodlab` get her user id once she has one. Tests prove that one user can't change another's recipes or home cooks.
-7. **Each person's profile lives on the server** (QST-PERSONAL-RULES: A): a short free-text profile per user, read and written with a tool, so it works the same in the app, on the phone, and in Claude Code with no setup. How this meets Kay's existing `PROFILE.md` is QST-PROFILE-SOURCE.
+7. **Each person's profile lives on the server** (QST-PERSONAL-RULES: A): a short free-text profile per user, read and written with a tool, so it works the same in the app, on the phone, and in Claude Code with no setup. Kay's `PROFILE.md` moves into it too (QST-PROFILE-SOURCE: B), so there is one profile per person, all on the server. This replaces the Project-file copy from "One profile per person". Consequence Kay chose knowingly: coach-training reads Kay's profile through the kitchen connector, so the workout plugin needs kitchen installed. Guidance files (`TRAINING_GUIDANCE.md`) are not profiles and stay where they are.
 8. **Skills become general.** "Kay" leaves skill text. Reply language follows the user (the model matches their language; in Claude Code, the `language` setting).
 
 Do not build: households, item owners, editing someone else's recipes, a shared recipe box, name normalization or translation tables, roles or admin users.
@@ -106,3 +106,9 @@ b
 - **Contributors**: Kay, Ari (Claude Opus 5.5).
 - **Changes**: Context adds "One profile per person" and guidance files. Decision: home cooks are per person and are the one record of cooking (replaces the separate cooked marker); household can read each other's recipes; profiles live on the server. New question: QST-PROFILE-SOURCE.
 - **Outcome**: Draft.
+
+### Iteration 3 — 2026-11-20
+- **Trigger**: Kay answered QST-PROFILE-SOURCE (B).
+- **Contributors**: Kay, Ari (Claude Opus 5.5).
+- **Changes**: Decision 7: every profile, Kay's included, lives on the kitchen server; coach-training depends on the kitchen connector for it.
+- **Outcome**: Draft. No open questions remain.

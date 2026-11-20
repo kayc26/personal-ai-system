@@ -1,12 +1,12 @@
 # ADR-0001: Split the system by area
 
 - **Date**: 2026-11-20
-- **Iteration**: 2
+- **Iteration**: 3
 - **Status**: Draft
 - **Deciders**: Kay (decides), Ari (Claude Opus 5.5, recommends)
 - **Source**: [seed-2026-11-20-separating-the-system](seed-2026-11-20-separating-the-system.md)
 
-**TL;DR**: Kitchen, workout, and restaurants each become one repo, one Neon project, and one Claude Code plugin (server and skills together), replacing today's single plugin in this repo. Recipes and home cooks move from food-journal to kitchen. personal-ai-system freezes and its stats stop.
+**TL;DR**: Kitchen, workout, and restaurants each become one repo, one Neon project, and one Claude Code plugin (server and skills together), replacing today's single plugin in this repo. Recipes and home cooks move from food-journal to kitchen. Meals with check-ins are retired. personal-ai-system freezes and its stats stop; each area repo is its own marketplace.
 
 ---
 
@@ -33,11 +33,11 @@ What exists today (checked against `origin/main` at b917a60; iteration 1 was wri
 
    | Repo | Server | Skills | Users |
    |---|---|---|---|
-   | kitchen-inventory | inventory, plus saved recipes and home cooks moved in | manage-kitchen-inventory, clip-recipe, suggest-what-to-cook, check-nutrition, log-home-cooking | Multi-user ([ADR-0003](0003-kitchen-multi-user-data-model.md)) |
+   | kitchen-inventory | inventory, plus saved recipes, home cooks, and its own dish catalog | manage-kitchen-inventory, clip-recipe, suggest-what-to-cook, check-nutrition, log-home-cooking | Multi-user ([ADR-0003](0003-kitchen-multi-user-data-model.md)) |
    | workout-log | unchanged | coach-training | Kay |
-   | food-journal | restaurants, visits, lists, dish catalog, meals (see QST-MEALS-HOME) | suggest-where-to-eat, log-dining-out, log-ready-to-eat | Kay; public reads later |
+   | food-journal | restaurants, visits, lists, dish catalog | suggest-where-to-eat, log-dining-out | Kay; public reads later |
 
-2. **Recipes and home cooks move to kitchen** (QST-HOME-COOKS: C). Saved recipes, the "this week" list, and the home-cook history move from `kayfoodlab` to kitchen's database. This **reverses** "Restaurants and recipes stay in one server and one database". What happens to the home cooks' dish-catalog links is QST-HOME-COOK-DISHES.
+2. **Recipes and home cooks move to kitchen** (QST-HOME-COOKS: C). Saved recipes, the "this week" list, and the home-cook history move from `kayfoodlab` to kitchen's database. This **reverses** "Restaurants and recipes stay in one server and one database". Kitchen gets its own copy of the dish catalog for home cooks (QST-HOME-COOK-DISHES: B); food-journal keeps its catalog for restaurant dishes. From the copy on, the two are separate: "cooked this or had it out?" across both only works where names match.
 3. **Cross-area links live in skills, not between servers.** suggest-what-to-cook reads training from workout-log when that connector is installed and skips it otherwise. check-nutrition ships with kitchen (QST-NUTRITION-HOME: A). No server calls another.
 4. **One Neon project per server.** The order matters:
    1. Copy recipes and home cooks from `kayfoodlab` to `neondb`. Both are in the same project, so it's a table copy.
@@ -45,7 +45,9 @@ What exists today (checked against `origin/main` at b917a60; iteration 1 was wri
 
    A fresh project, not `personal-ai-auth`, which is left over from an earlier auth attempt.
 5. **This repo freezes** (QST-HUB-SUNSET: A). Skills move to their area repos; this repo keeps README, map, and records until the personal website exists, with a note pointing to the three repos. The daily stats action stops. Skills move with their history (`check_skills.py` and `RETIRED.txt` go to each area repo, or are retired, per the build prompts).
-6. **Auth on all three** is [ADR-0002](0002-oauth-through-neon-auth.md).
+6. **Meals with check-ins are retired** (QST-MEALS-HOME: "sunset those"; confirmed in chat 2026-11-20: "i don't want that feature any more"). log-ready-to-eat is retired (its only record was the meal); "I ate the last yogurt" goes to manage-kitchen-inventory. log-home-cooking and log-dining-out keep only the home cook and the visit. The meal tools (`start_meal`, `end_meal`, `get_open_meal`, `update_meal`) come out of food-journal; meal data is kept. Recorded in `docs/decisions.md` as a Kay-only change.
+7. **Each area repo is its own marketplace** (QST-MARKETPLACE: A). A roommate installs kitchen with `/plugin marketplace add kayc26/mcp-kitchen-inventory`. The `kay` marketplace in this repo goes with the freeze.
+8. **Auth on all three** is [ADR-0002](0002-oauth-through-neon-auth.md).
 
 Not decided here: the coach redesign, the restaurant redesign, public read access, and the personal website. Each gets its own seed.
 
@@ -180,3 +182,9 @@ a
 - **Contributors**: Kay, Ari (Claude Opus 5.5).
 - **Changes**: Context rewritten from the current repo (existing plugin, nine skills, one profile per person, meals). Decision updated with the three answers: home cooks and log-home-cooking move to kitchen, check-nutrition ships with kitchen, this repo freezes. New questions: QST-MEALS-HOME, QST-HOME-COOK-DISHES, QST-MARKETPLACE.
 - **Outcome**: Draft.
+
+### Iteration 3 — 2026-11-20
+- **Trigger**: Kay answered the three remaining questions (MEALS-HOME "sunset those", HOME-COOK-DISHES B, MARKETPLACE A) and confirmed in chat that meals and log-ready-to-eat go.
+- **Contributors**: Kay, Ari (Claude Opus 5.5).
+- **Changes**: Decision 1 table (kitchen gets its own dish catalog; food-journal loses meals and log-ready-to-eat), decision 2 (dish catalog copy), new decision 6 (meals retired), new decision 7 (marketplace per repo).
+- **Outcome**: Draft. No open questions remain.
