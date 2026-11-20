@@ -75,7 +75,7 @@ a
 ---
 
 ### QST-PROFILE-SOURCE: How does the server profile meet Kay's `PROFILE.md`?
-- Status: unanswered
+- Status: answered
 - Why asking: decision 7 puts profiles on the kitchen server, but Kay's `PROFILE.md` already holds her facts for every skill, including coach-training in the workout plugin. Two copies of Kay's profile could disagree; moving it into kitchen would make the coach depend on kitchen.
 - Need: pick a letter (or override — any shape answers)
 
@@ -88,8 +88,8 @@ Options:
 **A — File first, server as fallback.** Rationale: it keeps Kay's single profile ("One profile per person") and the "no server calls another" rule (ADR-0001 decision 3), and check-nutrition already has a fallback path when no profile file is found (skills/check-nutrition/SKILL.md, "Not found"). Roommates get the server profile, which is what QST-PERSONAL-RULES: A was for.
 Confidence: 0.6, because a fallback chain means two places a skill looks, and a model could pick the wrong one. If wrong: if Kay wants to stop uploading `PROFILE.md` to the Project, B; if the coach should never see food facts, C.
 
-**ANS:** (by Kay)
-[Fill this in]
+**ANS:** (by kayc26)
+b
 
 ---
 
