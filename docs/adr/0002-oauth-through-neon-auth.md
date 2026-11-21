@@ -36,7 +36,7 @@
 5. **Rollout is one server at a time.** Kitchen goes first. Turning auth on breaks the existing connector until Kay re-adds it and signs in, so each switch is a planned step.
 6. **food-journal's upload endpoint keeps `IMPORT_TOKEN`.** It isn't an MCP route.
 7. **Each server serves its own `/login` and `/consent` pages** on its Render URL, added as a trusted domain on its issuer (QST-PAGES-HOST: A). The pages use Neon's browser client, `@neon/auth`, not hand-written calls (step 0).
-8. **Sign in with a code sent by email** (Neon's email OTP). No Google, and no passwords (QST-SIGNIN-AFTER-SPIKE: B, which supersedes QST-SIGNIN-METHOD).
+8. **Sign in with a code sent by email** (Neon's email OTP). No Google, and no passwords (QST-SIGNIN-AFTER-SPIKE: B, which supersedes QST-SIGNIN-METHOD). Codes come from Neon's shared sender to start; switch to our own email provider if codes go missing or land in spam (QST-EMAIL-SENDER: A).
 9. **Two locks on who may use a server** (QST-WHO-MAY-SIGN-UP: C): an allowlist of user ids per server in an env var, checked in code and covered by tests (the guarantee), and sign-ups closed in Neon with `disable_sign_up` once the allowed people have registered (reduces junk accounts; step 0 confirmed it works for email sign-ups).
 
 ### Step 0, before the first build prompt (done 2026-11-20)
@@ -179,4 +179,4 @@ a
 - **Trigger**: step 0 on kitchen (prompt #14). Google sign-in failed inside the Claude iPhone app; email-code sign-in worked.
 - **Contributors**: Kay, Ari (Claude Opus 5.5, in the kitchen-inventory session).
 - **Changes**: Context gains the step-0 results. Decision 7 requires `@neon/auth` in the pages. Decision 8 changes from Google to an emailed code. Decision 9 confirms `disable_sign_up` works for email sign-ups. QST-SIGNIN-METHOD is superseded by QST-SIGNIN-AFTER-SPIKE (Kay: B, given in the session). New QST-EMAIL-SENDER.
-- **Outcome**: Draft. One open question (QST-EMAIL-SENDER). The next step is the kitchen build prompt, written from the step-0 report.
+- **Outcome**: Draft. Kay answered QST-EMAIL-SENDER (A); no open questions remain. The next step is the kitchen build prompt, written from the step-0 report.
